@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Sql on A Hugo website</title>
+    <link>/tags/sql/</link>
+    <description>Recent content in Sql on A Hugo website</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 01 May 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/sql/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Testing SQL Queries from RStudio</title>
+      <link>/2018/05/01/testing-sql-queries-from-rstudio/</link>
+      <pubDate>Tue, 01 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/05/01/testing-sql-queries-from-rstudio/</guid>
+      <description>How to easily populate a SQL table using R Here’s a dumb little problem I’ve had to solve a few times while job searching:
+Certain roles will want to assess candidates’ ability to write basic SQL queries, but rather than give you access to a SQL database, you’ll merely be provided the schema of the table (the schema tells you the name of all the columns in the tables and the data type for each column), or possibly data in a CSV file or spreadsheet (most recently for me, it was a table within a Word doc).</description>
+    </item>
+    
+  </channel>
+</rss>

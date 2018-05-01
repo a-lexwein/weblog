@@ -1,0 +1,150 @@
+---
+title: Testing SQL Queries from RStudio
+author: Alex
+date: '2018-05-01'
+slug: testing-sql-queries-from-rstudio
+categories: []
+tags:
+  - sql
+  - dyplr
+  - job search
+---
+
+
+
+<div id="how-to-easily-populate-a-sql-table-using-r" class="section level2">
+<h2>How to easily populate a SQL table using R</h2>
+<p>Here’s a dumb little problem I’ve had to solve a few times while job searching:</p>
+<p>Certain roles will want to assess candidates’ ability to write basic SQL queries, but rather than give you access to a SQL database, you’ll merely be provided the schema of the table (the schema tells you the name of all the columns in the tables and the data type for each column), or possibly data in a CSV file or spreadsheet (most recently for me, it was a table within a Word doc). The company then asks you to provide some queries to do certain transformations.</p>
+<p>For analyst-y roles with homework like this, “knowing” SQL means being able to write queries, and has nothing to do with deploying databases or getting data into tables. In these homework situations, where you aren’t provided access to a database, it can be very hard to just execute your query and verify it does what you think it does.</p>
+<p>But you definitely want to test your code! Even if you know how to query with SQL pretty well, it’s an easy language to make typos in. And <em>you should always test that your code works as intended!</em> Especially when a job offer is on the line.</p>
+<p>I have a memory from a few years ago of spending a few trying to get a schema and dummy data into MySQL Workbench, all to verify a few queries I wrote in 20 minutes for coding assessment. But it was a good thing I did, because my initial query had a syntax bug in it!</p>
+<p>Having learned more about databases, I have a nice clean solution : using R and SQLite.</p>
+<p>SQLite fits somewhere between a using standard relational database like MySQL and saving files as a CSV. Typically a SQL database lives on its own server (or cluster of servers) and is designed to provide fast and consistent data across a big system where multiple users have different permissions about what data they can access or create. SQLite uses the structure of a relational database, but works with files saved to your machine.</p>
+<p>For testing out a query on some data as fast as possible, SQLite is perfect!</p>
+</div>
+<div id="heres-a-demo-year-of-the-alexes" class="section level2">
+<h2>Here’s a demo: Year of the Alexes</h2>
+<p>You need to know enough R to run the code below. I used RStudio notebooks to easily incorporate chunks of R and SQL into the same workflow. You can run this whole notebook from RStudio, or if you want everything in a .R script, you can define the query as as string in R and use <code>dbi::dbGetQuery</code> (as demonstrated below).</p>
+<p>You’ll need to install the following packages if you haven’t already. I’ll use the the <code>babynames</code> package, which contains annual data on the popularity of baby names using Social Security Administration statistics.</p>
+<p>While I’m loading all the packages up front, I also reference the package name calling functions to make it clear when I’m using which package. Which is to say I’ll write <code>DBI::dbWriteTable(db, &quot;babynames&quot;, babynames::babynames)</code> instead of the shorter, equally valid <code>dbWriteTable(db, &quot;babynames&quot;, babynames)</code>.</p>
+<pre class="r"><code>library(DBI)
+library(RSQLite)
+library(babynames)
+library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<p>It’s really just two lines of code. First we create a new connection to a SQLite database. Then we write the <code>babynames</code> dataset to the table. The <code>DBI</code> package handles the schema for you. Instead of loading <code>babynames</code> you’re first step in the process might be reading a csv or some other way to get the data into R.</p>
+<pre class="r"><code>db &lt;- DBI::dbConnect(RSQLite::SQLite(), &quot;demo&quot;)
+try(DBI::dbRemoveTable(db, &quot;babynames&quot;))
+DBI::dbWriteTable(db, &quot;babynames&quot;, babynames::babynames)</code></pre>
+<p>Now we have a table to query! (The <code>try</code> statement drops the table if it exists so we can create a clean version.)</p>
+<p>We can query the table. Here’s one I’m sure everybody has been dying to know: <strong>What year were the most boys named Alex born?</strong></p>
+<p>Let’s assume count anyone whose name starts with A-L-E-X. (Because the data doesn’t include names with less than 5 births by gender in a given year, this undercounts the true number of Alexes born.)</p>
+<pre class="sql"><code>SELECT year, sum(n) as num_alexes
+FROM babynames
+WHERE sex = &#39;M&#39; AND name LIKE &#39;Alex%&#39;
+GROUP BY year
+ORDER by num_alexes DESC
+LIMIT 5</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-3">Table 1: </span>5 records</caption>
+<thead>
+<tr class="header">
+<th align="right">year</th>
+<th align="right">num_alexes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2004</td>
+<td align="right">30254</td>
+</tr>
+<tr class="even">
+<td align="right">1993</td>
+<td align="right">29932</td>
+</tr>
+<tr class="odd">
+<td align="right">2006</td>
+<td align="right">29512</td>
+</tr>
+<tr class="even">
+<td align="right">1995</td>
+<td align="right">29419</td>
+</tr>
+<tr class="odd">
+<td align="right">1994</td>
+<td align="right">29366</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>2004! Who knew?</p>
+<p>And honestly that’s all there is to it! Two lines of code and you have a SQL table ripe for querying.</p>
+<p>If you’re not using RStudio, you can assign the query as a string variable and run this it as a block of R code:</p>
+<pre class="r"><code>query &lt;- &quot;SELECT year, sum(n) as num_alexes
+FROM babynames
+WHERE sex = &#39;M&#39; AND name LIKE &#39;Alex%&#39;
+GROUP BY year
+ORDER by num_alexes DESC
+LIMIT 5&quot;
+
+DBI::dbGetQuery(db, query)</code></pre>
+<pre><code>##   year num_alexes
+## 1 2004      30254
+## 2 1993      29932
+## 3 2006      29512
+## 4 1995      29419
+## 5 1994      29366</code></pre>
+</div>
+<div id="galaxy-brain-dont-learn-sql." class="section level2">
+<h2>Galaxy Brain: don’t learn SQL.</h2>
+<p>Who needs SQL anyways? There’s been a lot of great development work to let you write dplyr pipelines in R to pull data directly from relational databases. If I wasn’t worried about collaboration, I’d keep as much of my workflow in the Tidyverse as possible and not really worry about writing any SQL. dplyr is one of my favorite things in the world, and SQL is not.</p>
+<p>Here is the name calculation, from the same database, using the <code>dplyr</code> interface to querying databases:</p>
+<pre class="r"><code>tbl(db, &#39;babynames&#39;) %&gt;%
+  filter(sex == &#39;M&#39;) %&gt;%
+  filter(substr(name, 1,4) ==&#39;Alex&#39;) %&gt;% 
+  group_by(year) %&gt;%
+  summarise(num_alexes = sum(n)) %&gt;%
+  arrange(desc(num_alexes)) %&gt;%
+  head(5)</code></pre>
+<pre><code>## Warning: Missing values are always removed in SQL.
+## Use `SUM(x, na.rm = TRUE)` to silence this warning</code></pre>
+<pre><code>## # Source:     lazy query [?? x 2]
+## # Database:   sqlite 3.19.3 [demo]
+## # Ordered by: desc(num_alexes)
+##    year num_alexes
+##   &lt;dbl&gt;      &lt;int&gt;
+## 1  2004      30254
+## 2  1993      29932
+## 3  2006      29512
+## 4  1995      29419
+## 5  1994      29366</code></pre>
+<p>This is exactly the same pipeline we’d write to crunch the numbers from the <code>babynames</code> dataset in R that we started with, and skipped the move to SQLite altogether:</p>
+<pre class="r"><code>babynames::babynames %&gt;%
+  filter(sex == &#39;M&#39;) %&gt;%
+  filter(substr(name, 1,4) ==&#39;Alex&#39;) %&gt;%
+  group_by(year) %&gt;%
+  summarise(num_alexes = sum(n)) %&gt;%
+  arrange(desc(num_alexes)) %&gt;%
+  head(5)</code></pre>
+<pre><code>## # A tibble: 5 x 2
+##    year num_alexes
+##   &lt;dbl&gt;      &lt;int&gt;
+## 1  2004      30254
+## 2  1993      29932
+## 3  2006      29512
+## 4  1995      29419
+## 5  1994      29366</code></pre>
+<div id="galaxy-brain-over-you-definitely-should-learn-some-sql" class="section level3">
+<h3>Galaxy Brain over: you definitely should learn some SQL</h3>
+<p>Not learning SQL is bad career advice. SQL is a very central language in the world of data. It’s also not super confusing if you already know dplyr, which very deliberately has borrowed keywords from SQL. Once you really start to grasp the grammar of dplyr, data manipulation on rectangular data becomes a lot easier regardless of the tools you’re using. Of the technology and tools I’ve learned, SQL was rather easy to pick up, mostly because I had already done a lot of data manipulation using other tools. Learning how to aggregate and join data isn’t easy, but once you get the hang of it, learning to do it in a second language really isn’t that bad.</p>
+</div>
+</div>

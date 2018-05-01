@@ -1,0 +1,116 @@
+---
+title: Testing SQL Queries from RStudio
+author: Alex
+date: '2018-05-01'
+slug: testing-sql-queries-from-rstudio
+categories: []
+tags:
+  - sql
+  - dyplr
+  - job search
+---
+
+
+## How to easily populate a SQL table using R
+
+Here's a dumb little problem I've had to solve a few times while job searching:
+
+Certain roles will want to assess candidates' ability to write basic SQL queries, but rather than give you access to a SQL database, you'll merely be provided the schema of the table (the schema tells you the name of all the columns in the tables and the data type for each column), or possibly data in a CSV file or spreadsheet (most recently for me, it was a table within a Word doc).  The company then asks you to provide some queries to do certain transformations.
+
+For analyst-y roles with homework like this, "knowing" SQL means being able to write queries, and has nothing to do with deploying databases or getting data into tables. In these homework situations, where you aren't provided access to a database, it can be very hard to just execute your query and verify it does what you think it does.
+
+But you definitely want to test your code! Even if you know how to query with SQL pretty well, it's an easy language to make typos in. And *you should always test that your code works as intended!* Especially when a job offer is on the line. 
+
+I have a memory from a few years ago of spending a few trying to get a schema and dummy data into MySQL Workbench, all to verify a few queries I wrote in 20 minutes for coding assessment. But it was a good thing I did, because my initial query had a syntax bug in it!
+
+Having learned more about databases, I have a nice clean solution : using R and SQLite.
+
+SQLite fits somewhere between a using standard relational database like MySQL and saving files as a CSV.  Typically a SQL database lives on its own server (or cluster of servers) and is designed to provide fast and consistent data across a big system where multiple users have different permissions about what data they can access or create. SQLite uses the structure of a relational database, but works with files saved to your machine.
+
+For testing out a query on some data as fast as possible, SQLite is perfect!
+
+## Here's a demo: Year of the Alexes
+
+You need to know enough R to run the code below. I used RStudio notebooks to easily incorporate chunks of R and SQL into the same workflow.  You can run this whole notebook from RStudio, or if you want everything in a .R script, you can define the query as as string in R and use `dbi::dbGetQuery` (as demonstrated below).
+
+You'll need to install the following packages if you haven't already. I'll use the the `babynames` package, which contains annual data on the popularity of baby names using Social Security Administration statistics.
+
+While I'm loading all the packages up front, I also reference the package name calling functions to make it clear when I'm using which package. Which is to say I'll write `DBI::dbWriteTable(db, "babynames", babynames::babynames)` instead of the shorter, equally valid `dbWriteTable(db, "babynames", babynames)`.
+
+```{r}
+library(DBI)
+library(RSQLite)
+library(babynames)
+library(dplyr)
+```
+
+It's really just two lines of code.  First we create a new connection to a SQLite database. Then we write the `babynames` dataset to the table.  The `DBI` package handles the schema for you. Instead of loading `babynames` you're first step in the process might be reading a csv or some other way to get the data into R.
+
+```{r}
+db <- DBI::dbConnect(RSQLite::SQLite(), "demo")
+try(DBI::dbRemoveTable(db, "babynames"))
+DBI::dbWriteTable(db, "babynames", babynames::babynames)
+```
+
+Now we have a table to query! (The `try` statement drops the table if it exists so we can create a clean version.)
+
+We can query the table. Here's one I'm sure everybody has been dying to know: **What year were the most boys named Alex born?**
+
+Let's assume count anyone whose name starts with A-L-E-X. (Because the data doesn't include names with less than 5 births by gender in a given year, this undercounts the true number of Alexes born.)
+
+
+```{sql, connection = db}
+SELECT year, sum(n) as num_alexes
+FROM babynames
+WHERE sex = 'M' AND name LIKE 'Alex%'
+GROUP BY year
+ORDER by num_alexes DESC
+LIMIT 5
+```
+
+2004!  Who knew?
+
+And honestly that's all there is to it!  Two lines of code and you have a SQL table ripe for querying.
+
+If you're not using RStudio, you can assign the query as a string variable and run this it as a block of R code:
+```{r}
+query <- "SELECT year, sum(n) as num_alexes
+FROM babynames
+WHERE sex = 'M' AND name LIKE 'Alex%'
+GROUP BY year
+ORDER by num_alexes DESC
+LIMIT 5"
+
+DBI::dbGetQuery(db, query)
+```
+
+## Galaxy Brain: don't learn SQL.
+Who needs SQL anyways? There's been a lot of great development work to let you write dplyr pipelines in R to pull data directly from relational databases. If I wasn't worried about collaboration, I'd keep as much of my workflow in the Tidyverse as possible and not really worry about writing any SQL. dplyr is one of my favorite things in the world, and SQL is not.
+
+Here is the name calculation, from the same database, using the `dplyr` interface to querying databases:
+
+```{r}
+tbl(db, 'babynames') %>%
+  filter(sex == 'M') %>%
+  filter(substr(name, 1,4) =='Alex') %>% 
+  group_by(year) %>%
+  summarise(num_alexes = sum(n)) %>%
+  arrange(desc(num_alexes)) %>%
+  head(5)
+```
+
+
+This is exactly the same pipeline we'd write to crunch the numbers from the `babynames` dataset in R that we started with, and skipped the move to SQLite altogether:
+
+```{r}
+babynames::babynames %>%
+  filter(sex == 'M') %>%
+  filter(substr(name, 1,4) =='Alex') %>%
+  group_by(year) %>%
+  summarise(num_alexes = sum(n)) %>%
+  arrange(desc(num_alexes)) %>%
+  head(5)
+```
+
+### Galaxy Brain over: you definitely should learn some SQL
+Not learning SQL is bad career advice. SQL is a very central language in the world of data. It's also not super confusing if you already know dplyr, which very deliberately has borrowed keywords from SQL. Once you really start to grasp the grammar of dplyr, data manipulation on rectangular data becomes a lot easier regardless of the tools you're using. Of the technology and tools I've learned, SQL was rather easy to pick up, mostly because I had already done a lot of data manipulation using other tools. Learning how to aggregate and join data isn't easy, but once you get the hang of it, learning to do it in a second language really isn't that bad.

@@ -1,6 +1,15 @@
 ---
 title: "About"
-date: "2016-05-05T21:48:51-07:00"
 ---
 
-This is a "hello world" example website for the [**blogdown**](https://github.com/rstudio/blogdown) package. The theme was forked from [@jrutheiser/hugo-lithium-theme](https://github.com/jrutheiser/hugo-lithium-theme) and modified by [Yihui Xie](https://github.com/yihui/hugo-lithium).
+I'm Alex Wein. I'm currently looking for a data job in San Francisco.  Here are a few things I'm nerdy about:
+
+- R's Tidyverse
+- Data Visualization
+- Pop Music
+- Linguistics
+- Tax Policy
+- Functional Programming
+- The Metaphysics of Fictional Worlds
+
+Some of those overlap.
