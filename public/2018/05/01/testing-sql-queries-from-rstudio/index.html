@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Hugo 0.36.1" />
+<meta name="generator" content="Hugo 0.52" />
 
 
 <title>Testing SQL Queries from RStudio - A Hugo website</title>
@@ -69,15 +69,18 @@
     
 
     <div class="article-content">
-      <div id="how-to-easily-populate-a-sql-table-using-r" class="section level2">
+      
+
+
+<div id="how-to-easily-populate-a-sql-table-using-r" class="section level2">
 <h2>How to easily populate a SQL table using R</h2>
 <p>Here’s a dumb little problem I’ve had to solve a few times while job searching:</p>
 <p>Certain roles will want to assess candidates’ ability to write basic SQL queries, but rather than give you access to a SQL database, you’ll merely be provided the schema of the table (the schema tells you the name of all the columns in the tables and the data type for each column), or possibly data in a CSV file or spreadsheet (most recently for me, it was a table within a Word doc). The company then asks you to provide some queries to do certain transformations.</p>
 <p>For analyst-y roles with homework like this, “knowing” SQL means being able to write queries, and has nothing to do with deploying databases or getting data into tables. In these homework situations, where you aren’t provided access to a database, it can be very hard to just execute your query and verify it does what you think it does.</p>
 <p>But you definitely want to test your code! Even if you know how to query with SQL pretty well, it’s an easy language to make typos in. And <em>you should always test that your code works as intended!</em> Especially when a job offer is on the line.</p>
-<p>I have a memory from a few years ago of spending a few trying to get a schema and dummy data into MySQL Workbench, all to verify a few queries I wrote in 20 minutes for coding assessment. But it was a good thing I did, because my initial query had a syntax bug in it!</p>
-<p>Having learned more about databases, I have a nice clean solution : using R and SQLite.</p>
-<p>SQLite fits somewhere between a using standard relational database like MySQL and saving files as a CSV. Typically a SQL database lives on its own server (or cluster of servers) and is designed to provide fast and consistent data across a big system where multiple users have different permissions about what data they can access or create. SQLite uses the structure of a relational database, but works with files saved to your machine.</p>
+<p>I have a memory from a few years ago of spending a few hours trying to get a schema and dummy data into MySQL Workbench, all to verify a few queries I wrote in 20 minutes for coding assessment. But it was a good thing I did, because my initial query had a syntax bug in it!</p>
+<p>Having learned more about databases, I have a nice clean solution: using R and SQLite.</p>
+<p>SQLite fits somewhere between a standard relational database like MySQL and saving files as a CSV. Traditionally, a SQL database lives on its own server (or cluster of servers) and is designed to provide fast and consistent data across a big system where multiple users may have different permissions about what data they can access, create, and update. SQLite uses the structure of a relational database, but works with files saved to your machine.</p>
 <p>For testing out a query on some data as fast as possible, SQLite is perfect!</p>
 </div>
 <div id="heres-a-demo-year-of-the-alexes" class="section level2">
@@ -175,7 +178,7 @@ DBI::dbGetQuery(db, query)</code></pre>
 <pre><code>## Warning: Missing values are always removed in SQL.
 ## Use `SUM(x, na.rm = TRUE)` to silence this warning</code></pre>
 <pre><code>## # Source:     lazy query [?? x 2]
-## # Database:   sqlite 3.19.3 [demo]
+## # Database:   sqlite 3.22.0 [/Users/alexwein/weblog/content/post/demo]
 ## # Ordered by: desc(num_alexes)
 ##    year num_alexes
 ##   &lt;dbl&gt;      &lt;int&gt;
@@ -200,8 +203,8 @@ DBI::dbGetQuery(db, query)</code></pre>
 ## 3  2006      29512
 ## 4  1995      29419
 ## 5  1994      29366</code></pre>
-<div id="galaxy-brain-over-you-definitely-should-learn-some-sql" class="section level3">
-<h3>Galaxy Brain over: you definitely should learn some SQL</h3>
+<div id="galaxy-brain-over-you-definitely-should-learn-some-sql." class="section level3">
+<h3>Galaxy Brain over: you definitely should learn some SQL.</h3>
 <p>Not learning SQL is bad career advice. SQL is a very central language in the world of data. It’s also not super confusing if you already know dplyr, which very deliberately has borrowed keywords from SQL. Once you really start to grasp the grammar of dplyr, data manipulation on rectangular data becomes a lot easier regardless of the tools you’re using. Of the technology and tools I’ve learned, SQL was rather easy to pick up, mostly because I had already done a lot of data manipulation using other tools. Learning how to aggregate and join data isn’t easy, but once you get the hang of it, learning to do it in a second language really isn’t that bad.</p>
 </div>
 </div>

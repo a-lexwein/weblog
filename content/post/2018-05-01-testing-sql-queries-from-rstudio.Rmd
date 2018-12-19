@@ -21,11 +21,11 @@ For analyst-y roles with homework like this, "knowing" SQL means being able to w
 
 But you definitely want to test your code! Even if you know how to query with SQL pretty well, it's an easy language to make typos in. And *you should always test that your code works as intended!* Especially when a job offer is on the line. 
 
-I have a memory from a few years ago of spending a few trying to get a schema and dummy data into MySQL Workbench, all to verify a few queries I wrote in 20 minutes for coding assessment. But it was a good thing I did, because my initial query had a syntax bug in it!
+I have a memory from a few years ago of spending a few hours trying to get a schema and dummy data into MySQL Workbench, all to verify a few queries I wrote in 20 minutes for coding assessment. But it was a good thing I did, because my initial query had a syntax bug in it!
 
-Having learned more about databases, I have a nice clean solution : using R and SQLite.
+Having learned more about databases, I have a nice clean solution: using R and SQLite.
 
-SQLite fits somewhere between a using standard relational database like MySQL and saving files as a CSV.  Typically a SQL database lives on its own server (or cluster of servers) and is designed to provide fast and consistent data across a big system where multiple users have different permissions about what data they can access or create. SQLite uses the structure of a relational database, but works with files saved to your machine.
+SQLite fits somewhere between a standard relational database like MySQL and saving files as a CSV.  Traditionally, a SQL database lives on its own server (or cluster of servers) and is designed to provide fast and consistent data across a big system where multiple users may have different permissions about what data they can access, create, and update. SQLite uses the structure of a relational database, but works with files saved to your machine.
 
 For testing out a query on some data as fast as possible, SQLite is perfect!
 
@@ -85,6 +85,7 @@ DBI::dbGetQuery(db, query)
 ```
 
 ## Galaxy Brain: don't learn SQL.
+
 Who needs SQL anyways? There's been a lot of great development work to let you write dplyr pipelines in R to pull data directly from relational databases. If I wasn't worried about collaboration, I'd keep as much of my workflow in the Tidyverse as possible and not really worry about writing any SQL. dplyr is one of my favorite things in the world, and SQL is not.
 
 Here is the name calculation, from the same database, using the `dplyr` interface to querying databases:
@@ -112,5 +113,6 @@ babynames::babynames %>%
   head(5)
 ```
 
-### Galaxy Brain over: you definitely should learn some SQL
+### Galaxy Brain over: you definitely should learn some SQL.
+
 Not learning SQL is bad career advice. SQL is a very central language in the world of data. It's also not super confusing if you already know dplyr, which very deliberately has borrowed keywords from SQL. Once you really start to grasp the grammar of dplyr, data manipulation on rectangular data becomes a lot easier regardless of the tools you're using. Of the technology and tools I've learned, SQL was rather easy to pick up, mostly because I had already done a lot of data manipulation using other tools. Learning how to aggregate and join data isn't easy, but once you get the hang of it, learning to do it in a second language really isn't that bad.
