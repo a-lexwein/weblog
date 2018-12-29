@@ -1,3 +1,3 @@
 # weblog
 
-If I blog, it might be [here](alexwein.netlify.com)
+If I blog, it might be [here](https:://alexwein.netlify.com)
