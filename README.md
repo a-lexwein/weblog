@@ -1,2 +1,3 @@
 # weblog
-Alex's Blog
+
+If I blog, it might be [here](alexwein.netlify.com)

@@ -17,7 +17,8 @@
       <pubDate>Fri, 28 Dec 2018 00:00:00 +0000</pubDate>
       
       <guid>/2018/12/28/latest-attempt-at-d3/</guid>
-      <description>library(r2d3) “Learn D3” has been on my todo list for years now. Maybe 3 years ago, Me and some teammates (know also didn’t no Javascript) tried to play with a simple example. Two summers ago, I worked through Scott Murray’s tutorials during a family vacation, after finally learning the ABCs of HTML, CSS, and JS through an online learning platform. I used a tiny bit of D3 in a little word game I made that fall, before I did an 3-month intensive software engineering bootcamp in full-stack javascript, where I didn’t</description>
+      <description>Lately, there’s been a particular kind of chart I want to make. I guess it’s beeswarm plot with variable radius, or maybe a packed circle timeline. Whatever you call it, Keith Collins and Kevin Roose published a story with a spectalucar one, tracking the proliferation of a political meme.
+I encountered something similar at Tapestry Conference in November – where I gave a talk by the way.</description>
     </item>
     
     <item>
