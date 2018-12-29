@@ -12,17 +12,23 @@ tags:
 library(r2d3)
 ```
 
-Lately, there's been a particular kind of chart I want to make. I guess it's beeswarm plot with variable radius, or maybe a packed circle timeline. Whatever you call it, Keith Collins and Kevin Roose published a story with a [spectalucar one](https://www.nytimes.com/interactive/2018/11/04/technology/jobs-not-mobs.html), tracking the proliferation of a political meme.
+Lately, there's been a particular kind of chart I want to make. I guess it's beeswarm plot with variable radius, or maybe a packed circle timeline. Whatever you call it, Keith Collins and Kevin Roose published a story with a [spectacular one](https://www.nytimes.com/interactive/2018/11/04/technology/jobs-not-mobs.html), tracking the proliferation of a right wing meme.
 
 I encountered something similar at Tapestry Conference in November -- [where I gave a talk](https://www.youtube.com/watch?v=PpAfmTgcGPY) by the way. Mollie Pettit presented some [great work](https://www.youtube.com/watch?v=v4VunaCburc) she's doing with the ACLU of Illinois, that examines racial bias in traffic incidents. Mollie's presentation was a standout among two days of wonderful talks. And the standout charts from Mollie's talk used beeswarms in the same manner the NYT journalists did (although her analysis doesn't use time on the x-axis). Afterward, I asked her how they were made. She told me something more specific than "D3", but that's all I remembered.
 
-I've never actually made a real data visualization in D3. Still, I've spent some time trying to understand it, and a lot more time understanding Javascript and web development (two things I didn't know the first time tried to play with D3). So with some downtime around the holidays, I decided to work towards building this data vis.  Not knowing what the hell I'm doing in D3, the right place to start was by googling, finding something that looked like it could be modified to become what I needed, pasting it into RStudio, 
+I've still never made an actual, real data visualization in D3. But I've spent some time trying to understand it, and a lot more time understanding Javascript and web development (two things I didn't know the first time tried to play with D3). So with some downtime around the holidays, I worked towards building this data vis.  Not knowing what the hell I'm doing in D3, here was my strategy:
 
-I ended up using Nate Vack's block ["Beeswarm plot with gravity and collisions"](http://bl.ocks.org/njvack/1316832), I didn't care about the gravity, but "collisions" was the piece I was most stumped on. Getting that into RStudio's way of working with D3 stumped me for a bit. The trick was to replace the section of the block where `svg` was defined, because the RStudio package `rd2d3` handles that by exposing a predefined `svg` variable for you to reference in your Javascript code.
+1. Browse the D3 docs for something that might help, while simultanesouly googling for an open-sourced example that felt close enough.
+1. Paste the example into RStudio, get it to work using the D3 support.
+1. Poke at the code until I understood it well enough to change it in the ways I needed.
 
-Nate's code defines `nodes`, and each node is randomly assigned a `y`-value based on the `norm()` function defined at the top. Then the nodes are passed into `D3.layout.force`
+I ended up using Nate Vack's block ["Beeswarm plot with gravity and collisions"](http://bl.ocks.org/njvack/1316832), The gravity and collisions aspect was important to prevent the circles from overlapping.
 
-Here is what Nate's chart looks like:
+Getting that into RStudio's way of working with D3 stumped me for a bit. The trick was to replace the section of the block where `svg` was defined, because the RStudio package `rd2d3` handles that by exposing a predefined `svg` variable for you to reference in your Javascript code.
+
+The code defines `nodes`, and each node is randomly assigned a `y`-value based on the `norm()` function defined at the top. Then the nodes are passed into `D3.layout.force`, and the layout gets simulated to
+
+Here is what Nate Vack's chart looks like:
 
 ```{d3 echo=FALSE, data=c(1,2,3), d3_version=3}
 function norm() {
@@ -132,11 +138,11 @@ function collide(node) {
 
 It seemed like the right place to start, but the chart I have in my head is different from that in a few ways:
 
-1. I want the main axis to be horizontal.
-1. Circle color should encode a categorical variable.
-1. The circle size should encode a continuous variable.
+1. Rather than being all circles being the same size, the circle size should encode a continuous variable.
+1. Rather than a single color, circle color should encode a categorical variable.
+1. I wanted the distribution to be horizontal, rather than vertical.
 
-The variable radius piece was the easiest.  The original block had a line that said `var radius = 4,` in the loop that randomly created the circles.  I replaced it with to assign each circle a radius randomly based on a uniform distribution between zero and seven `var radius = 7 * Math.random(),`
+Step 1 was the easiest.  The original block had a line that said `var radius = 4,` in the loop that randomly created the circles.  I updated it to assign each circle a radius randomly based on a uniform distribution between zero and seven `var radius = 7 * Math.random(),`.
 
 ```{d3 echo=FALSE, data=c(1,2,3), d3_version=3}
 function norm() {
@@ -244,7 +250,7 @@ function collide(node) {
 }
 ```
 
-To encode color, I first added `color` as a property of each node, randomly assigning it one of two hex codes. To pick colors, I literally just typed letters in having no idea what colors would come out, and kind of liked it.  Then in the section that starts with `svg.selectAll`
+To encode color, I first added `color` as a property of each node, randomly assigning it one of two hex codes. To choose colors, I literally just typed random digits for the hex codes, having no idea what colors would come out.  Then in the section of the code that starts with `svg.selectAll`, I replaced the fixed value of the `fill` style with a function that mapped to the color property I defined in the node code: `.style("fill", d => d.color)`.
 
 ```{d3 echo=FALSE, data=c(1,2,3), d3_version=3}
 function norm() {
@@ -353,7 +359,7 @@ function collide(node) {
 }
 ```
 
-Then to swap the axis, I needed to switch `x` and `y`. I was only sort of guessing at what the code did, I figured I needed to change `true_x` and `true_y`.  After some poking, I got it.  In addition to swapping coordinates in the nodes, I also needed to swap the coefficients on `xerr` and `yerr` in the while loop. the Here's the full code with all the changes (I also added an axis):
+Then to swap the axis, I basically looked at everything defined in terms of `x` and `y` in the code and tried to flip them. I needed to switch `x` and `y`. I figured I needed to change `true_x` and `true_y`.  After some poking, I got it.  In addition to swapping coordinates in the nodes, I also needed to swap the coefficients on `xerr` and `yerr` in the while loop.
 
 ```{d3 echo=FALSE, data=c(1,2,3), d3_version=3}
 function norm() {
@@ -466,11 +472,12 @@ function collide(node) {
 
 ### Next Steps I might not take
 
-I'm excited by the progress, although this is still a little ways from visualizing any data. There are a lot of places to go from here. Here is a jargon-heavy list of good steps to iterate on this tiny bit of code that are mostly indepedent of each other.
+I'm excited by the progress I made, although this is still a  ways from being usable to visualize data. There are a lot of places to go from here. Here is a list of good of where I *should* go with it.
 
-1. Move the data simulator into R and use R2D3 to pass that in, possibly in a Shiny app.
-1. Find some actual data to visualize, and make sure areas are proportional instead of radii.
+1. Move the random data generator into R and use R2D3 to pass that in, possibly in a Shiny app.
+1. Find some actual data to visualize.
 1. Just keep poking at params of the existing script, with the aim of understanding `d3.layout.force` and `d3.geom.quadtree` a little better.
+1. Add in mouseover or click interactions with the circles.
 1. Find another D3 example for packing circles that looks a little cleaner and start over.
 1. Rather than copy and paste from a block, just try to write some fresh D3 code.
 1. Package the existing script into an htmlwidget.
@@ -585,5 +592,4 @@ function collide(node) {
   };
 }
 ```
-
 
