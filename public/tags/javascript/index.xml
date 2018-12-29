@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on A Hugo website</title>
-    <link>/post/</link>
-    <description>Recent content in Posts on A Hugo website</description>
+    <title>Javascript on A Hugo website</title>
+    <link>/tags/javascript/</link>
+    <description>Recent content in Javascript on A Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 28 Dec 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,16 +18,6 @@
       
       <guid>/2018/12/28/latest-attempt-at-d3/</guid>
       <description>library(r2d3) “Learn D3” has been on my todo list for years now. Maybe 3 years ago, Me and some teammates (know also didn’t no Javascript) tried to play with a simple example. Two summers ago, I worked through Scott Murray’s tutorials during a family vacation, after finally learning the ABCs of HTML, CSS, and JS through an online learning platform. I used a tiny bit of D3 in a little word game I made that fall, before I did an 3-month intensive software engineering bootcamp in full-stack javascript, where I didn’t</description>
-    </item>
-    
-    <item>
-      <title>Testing SQL Queries from RStudio</title>
-      <link>/2018/05/01/testing-sql-queries-from-rstudio/</link>
-      <pubDate>Tue, 01 May 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/2018/05/01/testing-sql-queries-from-rstudio/</guid>
-      <description>How to easily populate a SQL table using R Here’s a dumb little problem I’ve had to solve a few times while job searching:
-Certain roles will want to assess candidates’ ability to write basic SQL queries, but rather than give you access to a SQL database, you’ll merely be provided the schema of the table (the schema tells you the name of all the columns in the tables and the data type for each column), or possibly data in a CSV file or spreadsheet (most recently for me, it was a table within a Word doc).</description>
     </item>
     
   </channel>

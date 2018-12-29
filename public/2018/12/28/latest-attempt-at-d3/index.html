@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.52" />
+
+
+<title>Latest attempt at D3 - A Hugo website</title>
+<meta property="og:title" content="Latest attempt at D3 - A Hugo website">
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdn.bootcss.com/highlight.js/9.11.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/%3cnil%3e"
+         width=""
+         height=""
+         alt="">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/a-lexwein">GitHub: a-lexwein</a></li>
+    
+    <li><a href="/">Home</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">5 min read</span>
+    
+
+    <h1 class="article-title">Latest attempt at D3</h1>
+
+    
+    <span class="article-date">2018/12/28</span>
+    
+
+    <div class="article-content">
+      
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/r2d3-render/r2d3-render.js"></script>
+<script src="/rmarkdown-libs/webcomponents/webcomponents.js"></script>
+<script src="/rmarkdown-libs/r2d3-binding/r2d3.js"></script>
+<script src="/rmarkdown-libs/d3/d3.min.js"></script>
+
+
+<pre class="r"><code>library(r2d3)</code></pre>
+<p>“Learn D3” has been on my todo list for years now. Maybe 3 years ago, Me and some teammates (know also didn’t no Javascript) tried to play with a simple example. Two summers ago, I worked through Scott Murray’s tutorials during a family vacation, after finally learning the ABCs of HTML, CSS, and JS through an online learning platform. I used a tiny bit of D3 in a little word game I made that fall, before I did an 3-month intensive software engineering bootcamp in full-stack javascript, where I didn’t</p>
+<p>Learning D3 has been harder for me than learning other things</p>
+<ol style="list-style-type: decimal">
+<li>So the hardest part of learning D3 is learning Javascript, HTML, CSS, and SVG. Once you learn all those things, learning D3 is…still kind of hard.</li>
+<li><p>I am not as good at self-motivation as I hope to one day become, but</p></li>
+<li><p>As someone who has been making charts for a long time (and a R/Tidyverse kool-aid drinker)</p></li>
+</ol>
+<p>I still have never made a chart with data in D3.</p>
+<div id="google-for-the-right-bl.ock" class="section level1">
+<h1>Google for the right bl.ock</h1>
+<p>One of my issues with D3 is that I only want it when ggplot fails me. So anything I decide, now is the time for D3.</p>
+<p>I ended up on Nate Vack’s block <a href="http://bl.ocks.org/njvack/1316832">“Beeswarm plot with gravity and collisions”</a>. It was the collision detection. Getting that into RStudio’s way of working with D3 took me a while to figure out. The trick was to replace the section of the block where <code>svg</code> was defined, because the RStudio package <code>rd2d3</code> handles that by exposing a predefined <code>svg</code> variable for you to reference in your javascript code.</p>
+<p>Nate’s code defines <code>nodes</code> which is a randomly assigns a <code>y</code>-value based on the <code>norm()</code> function defined at the top. Then the nodes are passed into <code>D3.layout.force</code></p>
+<p>Here is the Nate’s block:</p>
+<div id="htmlwidget-1" style="width:672px;height:480px;" class="r2d3 html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"data":[1,2,3],"type":"numeric","container":"svg","options":null,"script":"var d3Script = function(d3, r2d3, data, svg, width, height, options, theme, console) {\nthis.d3 = d3;\n\nsvg = d3.select(svg.node());\nfunction norm() {\n  var res, i;\n  res = 0;\n  for (i = 0; i < 10; i += 1) {\n    res += Math.random()*2-1\n  }\n  return res;\n}\n\nvar w = 500,\n    h = 500;\n\nvar nodes = d3.range(400).map(function() { \n  var true_y = (norm()*50)+250;\n  return {\n    radius: 4, \n    y: true_y,\n    true_x: 250,\n    true_y: true_y }\n  });\n\nvar force = d3.layout.force()\n    .gravity(0)\n    .charge(0)\n    .friction(0.9)\n    .nodes(nodes)\n    .size([w, h]);\n\nvar root = nodes[0];\nroot.radius = 0;\nroot.fixed = true;\n\nforce.start();\n\nsvg.selectAll(\"circle\")\n    .data(nodes)\n  .enter().append(\"svg:circle\")\n    .attr(\"r\", function(d) { return d.radius; })\n    .style(\"fill\", 'steelblue')\n    .style(\"stroke\", \"black\");\n\nforce.on(\"tick\", function(e) {\n  var q,\n    node,\n    i = 0,\n    n = nodes.length;\n    \n  var q = d3.geom.quadtree(nodes);\n\n  while (++i < n) {\n    node = nodes[i];\n    q.visit(collide(node));\n    xerr = node.x - node.true_x;\n    yerr = node.y - node.true_y;\n    node.x -= xerr*0.005;\n    node.y -= yerr*0.8;\n  }\n  \n\n\n  svg.selectAll(\"circle\")\n      .attr(\"cx\", function(d) { return d.x; })\n      .attr(\"cy\", function(d) { return d.y; });\n});\n\nfunction collide(node) {\n  var r = node.radius,\n    nx1,\n    nx2,\n    ny1,\n    ny2,\n    xerr,\n    yerr;\n    \n  nx1 = node.x - r;\n  nx2 = node.x + r;\n  ny1 = node.y - r;\n  ny2 = node.y + r;\n      \n  return function(quad, x1, y1, x2, y2) {\n    if (quad.point && (quad.point !== node)) {\n      var x = node.x - quad.point.x,\n          y = node.y - quad.point.y,\n          l = Math.sqrt(x * x + y * y),\n          r = node.radius + quad.point.radius;\n      if (l < r) {\n        // we're colliding.\n        var xnudge, ynudge, nudge_factor;\n        nudge_factor = (l - r) / l * .4;\n        xnudge = x*nudge_factor;\n        ynudge = y*nudge_factor;\n        node.x -= xnudge;\n        node.y -= ynudge;\n        quad.point.x += xnudge;\n        quad.point.y += ynudge;\n      }\n    }\n    return x1 > nx2\n        || x2 < nx1\n        || y1 > ny2\n        || y2 < ny1;\n  };\n}\n};","style":null,"version":3,"theme":{"default":{"background":"#FFFFFF","foreground":"#000000"},"runtime":null},"useShadow":true},"evals":[],"jsHooks":[]}</script>
+<p>It seemed like the right place to start, but the chart I have in my head is different from that in a few ways:</p>
+<ol style="list-style-type: decimal">
+<li>I want the main axis to be horizontal.</li>
+<li>Circle color should encode a categorical variable.</li>
+<li>The circle size should encode a continuous variable.</li>
+</ol>
+<p>The variable radius piece was the easiest. The original block had a line that said <code>var radius = 4,</code> in the loop that randomly created the circles. I replaced it with to assign each circle a radius randomly based on a uniform distribution between zero and seven <code>var radius = 7 * Math.random(),</code></p>
+<div id="htmlwidget-2" style="width:672px;height:480px;" class="r2d3 html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"data":[1,2,3],"type":"numeric","container":"svg","options":null,"script":"var d3Script = function(d3, r2d3, data, svg, width, height, options, theme, console) {\nthis.d3 = d3;\n\nsvg = d3.select(svg.node());\nfunction norm() {\n  var res, i;\n  res = 0;\n  for (i = 0; i < 10; i += 1) {\n    res += Math.random()*2-1\n  }\n  return res;\n}\n\nvar w = 500,\n    h = 500;\n\nvar nodes = d3.range(400).map(function() { \n  var true_y = (norm()*50)+250;\n  return {\n    radius: 7 * Math.random(), \n    y: true_y,\n    true_x: 250,\n    true_y: true_y }\n  });\n\nvar force = d3.layout.force()\n    .gravity(0)\n    .charge(0)\n    .friction(0.9)\n    .nodes(nodes)\n    .size([w, h]);\n\nvar root = nodes[0];\nroot.radius = 0;\nroot.fixed = true;\n\nforce.start();\n\nsvg.selectAll(\"circle\")\n    .data(nodes)\n  .enter().append(\"svg:circle\")\n    .attr(\"r\", function(d) { return d.radius; })\n    .style(\"fill\", 'steelblue')\n    .style(\"stroke\", \"black\");\n\nforce.on(\"tick\", function(e) {\n  var q,\n    node,\n    i = 0,\n    n = nodes.length;\n    \n  var q = d3.geom.quadtree(nodes);\n\n  while (++i < n) {\n    node = nodes[i];\n    q.visit(collide(node));\n    xerr = node.x - node.true_x;\n    yerr = node.y - node.true_y;\n    node.x -= xerr*0.005;\n    node.y -= yerr*0.8;\n  }\n  \n\n\n  svg.selectAll(\"circle\")\n      .attr(\"cx\", function(d) { return d.x; })\n      .attr(\"cy\", function(d) { return d.y; });\n});\n\nfunction collide(node) {\n  var r = node.radius,\n    nx1,\n    nx2,\n    ny1,\n    ny2,\n    xerr,\n    yerr;\n    \n  nx1 = node.x - r;\n  nx2 = node.x + r;\n  ny1 = node.y - r;\n  ny2 = node.y + r;\n      \n  return function(quad, x1, y1, x2, y2) {\n    if (quad.point && (quad.point !== node)) {\n      var x = node.x - quad.point.x,\n          y = node.y - quad.point.y,\n          l = Math.sqrt(x * x + y * y),\n          r = node.radius + quad.point.radius;\n      if (l < r) {\n        // we're colliding.\n        var xnudge, ynudge, nudge_factor;\n        nudge_factor = (l - r) / l * .4;\n        xnudge = x*nudge_factor;\n        ynudge = y*nudge_factor;\n        node.x -= xnudge;\n        node.y -= ynudge;\n        quad.point.x += xnudge;\n        quad.point.y += ynudge;\n      }\n    }\n    return x1 > nx2\n        || x2 < nx1\n        || y1 > ny2\n        || y2 < ny1;\n  };\n}\n};","style":null,"version":3,"theme":{"default":{"background":"#FFFFFF","foreground":"#000000"},"runtime":null},"useShadow":true},"evals":[],"jsHooks":[]}</script>
+<p>To encode color, I first added <code>color</code> as a property of each node, randomly assigning it one of two hex codes. To pick colors, I literally just typed letters in having no idea what colors would come out, and kind of liked it. Then in the section that starts with <code>svg.selectAll</code></p>
+<div id="htmlwidget-3" style="width:672px;height:480px;" class="r2d3 html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"data":[1,2,3],"type":"numeric","container":"svg","options":null,"script":"var d3Script = function(d3, r2d3, data, svg, width, height, options, theme, console) {\nthis.d3 = d3;\n\nsvg = d3.select(svg.node());\nfunction norm() {\n  var res, i;\n  res = 0;\n  for (i = 0; i < 10; i += 1) {\n    res += Math.random()*2-1\n  }\n  return res;\n}\n\nvar w = 500,\n    h = 500;\n\nvar nodes = d3.range(400).map(function() { \n  var true_y = (norm()*50)+250;\n  return {\n    radius: 7 * Math.random(), \n    y: true_y,\n    true_x: 250,\n    true_y: true_y,\n    color: ['#123456', '#4bab56'][Math.floor(Math.random() + .5)] }\n  });\n\nvar force = d3.layout.force()\n    .gravity(0)\n    .charge(0)\n    .friction(0.9)\n    .nodes(nodes)\n    .size([w, h]);\n\nvar root = nodes[0];\nroot.radius = 0;\nroot.fixed = true;\n\nforce.start();\n\nsvg.selectAll(\"circle\")\n    .data(nodes)\n  .enter().append(\"svg:circle\")\n    .attr(\"r\", function(d) { return d.radius; })\n    .style(\"fill\", d => d.color)\n    .style(\"stroke\", \"black\")\n\nforce.on(\"tick\", function(e) {\n  var q,\n    node,\n    i = 0,\n    n = nodes.length;\n    \n  var q = d3.geom.quadtree(nodes);\n\n  while (++i < n) {\n    node = nodes[i];\n    q.visit(collide(node));\n    xerr = node.x - node.true_x;\n    yerr = node.y - node.true_y;\n    node.x -= xerr*0.005;\n    node.y -= yerr*0.8;\n  }\n  \n\n\n  svg.selectAll(\"circle\")\n      .attr(\"cx\", function(d) { return d.x; })\n      .attr(\"cy\", function(d) { return d.y; });\n});\n\nfunction collide(node) {\n  var r = node.radius,\n    nx1,\n    nx2,\n    ny1,\n    ny2,\n    xerr,\n    yerr;\n    \n  nx1 = node.x - r;\n  nx2 = node.x + r;\n  ny1 = node.y - r;\n  ny2 = node.y + r;\n      \n  return function(quad, x1, y1, x2, y2) {\n    if (quad.point && (quad.point !== node)) {\n      var x = node.x - quad.point.x,\n          y = node.y - quad.point.y,\n          l = Math.sqrt(x * x + y * y),\n          r = node.radius + quad.point.radius;\n      if (l < r) {\n        // we're colliding.\n        var xnudge, ynudge, nudge_factor;\n        nudge_factor = (l - r) / l * .4;\n        xnudge = x*nudge_factor;\n        ynudge = y*nudge_factor;\n        node.x -= xnudge;\n        node.y -= ynudge;\n        quad.point.x += xnudge;\n        quad.point.y += ynudge;\n      }\n    }\n    return x1 > nx2\n        || x2 < nx1\n        || y1 > ny2\n        || y2 < ny1;\n  };\n}\n};","style":null,"version":3,"theme":{"default":{"background":"#FFFFFF","foreground":"#000000"},"runtime":null},"useShadow":true},"evals":[],"jsHooks":[]}</script>
+<p>Then to swap the axis, I needed to switch <code>x</code> and <code>y</code>. I was only sort of guessing at what the code did, I figured I needed to change <code>true_x</code> and <code>true_y</code>. After some poking, I got it. In addition to swapping coordinates in the nodes, I also needed to swap the coefficients on <code>xerr</code> and <code>yerr</code> in the while loop. the Here’s the full code with all the changes (I also added an axis):</p>
+<pre class="d3"><code>function norm() {
+  var res, i;
+  res = 0;
+  for (i = 0; i &lt; 10; i += 1) {
+    res += Math.random()*2-1
+  }
+  return res;
+}
+
+var w = 500,
+    h = 500;
+
+var nodes = d3.range(400).map(function() { 
+  var true_y = (norm()*50)+250;
+  return {
+    radius: 7 * Math.random(), 
+    x: true_y,
+    true_x: true_y,
+    true_y: 200,
+    color: [&#39;#123456&#39;, &#39;#4bab56&#39;][Math.floor(Math.random() + .5)] }
+  });
+
+
+var force = d3.layout.force()
+    .gravity(0)
+    .charge(0)
+    .friction(0.9)
+    .nodes(nodes)
+    .size([w, h]);
+
+var root = nodes[0];
+root.radius = 0;
+root.fixed = true;
+
+force.start();
+
+svg.selectAll(&quot;circle&quot;)
+    .data(nodes)
+  .enter().append(&quot;svg:circle&quot;)
+    .attr(&quot;r&quot;, function(d) { return d.radius; })
+    .style(&quot;fill&quot;, d =&gt; d.color)
+    .style(&quot;stroke&quot;, &quot;black&quot;)
+
+force.on(&quot;tick&quot;, function(e) {
+  var q,
+    node,
+    i = 0,
+    n = nodes.length;
+    
+  var q = d3.geom.quadtree(nodes);
+
+  while (++i &lt; n) {
+    node = nodes[i];
+    q.visit(collide(node));
+    xerr = node.x - node.true_x;
+    yerr = node.y - node.true_y;
+    node.x -= xerr*0.5;
+    node.y -= yerr*0.008;
+  }
+  
+
+
+
+  svg.selectAll(&quot;circle&quot;)
+      .attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; });
+});
+
+function collide(node) {
+  var r = node.radius,
+    nx1,
+    nx2,
+    ny1,
+    ny2,
+    xerr,
+    yerr;
+    
+  nx1 = node.x - r;
+  nx2 = node.x + r;
+  ny1 = node.y - r;
+  ny2 = node.y + r;
+      
+  return function(quad, x1, y1, x2, y2) {
+    if (quad.point &amp;&amp; (quad.point !== node)) {
+      var x = node.x - quad.point.x,
+          y = node.y - quad.point.y,
+          l = Math.sqrt(x * x + y * y),
+          r = node.radius + quad.point.radius;
+      if (l &lt; r) {
+        // we&#39;re colliding.
+        var xnudge, ynudge, nudge_factor;
+        nudge_factor = (l - r) / l * .4;
+        xnudge = x*nudge_factor;
+        ynudge = y*nudge_factor;
+        node.x -= xnudge;
+        node.y -= ynudge;
+        quad.point.x += xnudge;
+        quad.point.y += ynudge;
+      }
+    }
+    return x1 &gt; nx2
+        || x2 &lt; nx1
+        || y1 &gt; ny2
+        || y2 &lt; ny1;
+  };
+}</code></pre>
+<div id="htmlwidget-4" style="width:672px;height:480px;" class="r2d3 html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4">{"x":{"data":[1,2,3],"type":"numeric","container":"svg","options":null,"script":"var d3Script = function(d3, r2d3, data, svg, width, height, options, theme, console) {\nthis.d3 = d3;\n\nsvg = d3.select(svg.node());\nfunction norm() {\n  var res, i;\n  res = 0;\n  for (i = 0; i < 10; i += 1) {\n    res += Math.random()*2-1\n  }\n  return res;\n}\n\nvar w = 500,\n    h = 500;\n\nvar nodes = d3.range(400).map(function() { \n  var true_y = (norm()*50)+250;\n  return {\n    radius: 7 * Math.random(), \n    x: true_y,\n    true_x: true_y,\n    true_y: 200,\n    color: ['#123456', '#4bab56'][Math.floor(Math.random() + .5)] }\n  });\n\n\nvar force = d3.layout.force()\n    .gravity(0)\n    .charge(0)\n    .friction(0.9)\n    .nodes(nodes)\n    .size([w, h]);\n\nvar root = nodes[0];\nroot.radius = 0;\nroot.fixed = true;\n\nforce.start();\n\nsvg.selectAll(\"circle\")\n    .data(nodes)\n  .enter().append(\"svg:circle\")\n    .attr(\"r\", function(d) { return d.radius; })\n    .style(\"fill\", d => d.color)\n    .style(\"stroke\", \"black\")\n\nforce.on(\"tick\", function(e) {\n  var q,\n    node,\n    i = 0,\n    n = nodes.length;\n    \n  var q = d3.geom.quadtree(nodes);\n\n  while (++i < n) {\n    node = nodes[i];\n    q.visit(collide(node));\n    xerr = node.x - node.true_x;\n    yerr = node.y - node.true_y;\n    node.x -= xerr*0.5;\n    node.y -= yerr*0.008;\n  }\n  \n\n\n\n  svg.selectAll(\"circle\")\n      .attr(\"cx\", function(d) { return d.x; })\n      .attr(\"cy\", function(d) { return d.y; });\n});\n\nfunction collide(node) {\n  var r = node.radius,\n    nx1,\n    nx2,\n    ny1,\n    ny2,\n    xerr,\n    yerr;\n    \n  nx1 = node.x - r;\n  nx2 = node.x + r;\n  ny1 = node.y - r;\n  ny2 = node.y + r;\n      \n  return function(quad, x1, y1, x2, y2) {\n    if (quad.point && (quad.point !== node)) {\n      var x = node.x - quad.point.x,\n          y = node.y - quad.point.y,\n          l = Math.sqrt(x * x + y * y),\n          r = node.radius + quad.point.radius;\n      if (l < r) {\n        // we're colliding.\n        var xnudge, ynudge, nudge_factor;\n        nudge_factor = (l - r) / l * .4;\n        xnudge = x*nudge_factor;\n        ynudge = y*nudge_factor;\n        node.x -= xnudge;\n        node.y -= ynudge;\n        quad.point.x += xnudge;\n        quad.point.y += ynudge;\n      }\n    }\n    return x1 > nx2\n        || x2 < nx1\n        || y1 > ny2\n        || y2 < ny1;\n  };\n}\n};","style":null,"version":3,"theme":{"default":{"background":"#FFFFFF","foreground":"#000000"},"runtime":null},"useShadow":true},"evals":[],"jsHooks":[]}</script>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdn.bootcss.com/highlight.js/9.11.0/highlight.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/r.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+

@@ -6,10 +6,19 @@
     <description>Recent content on A Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 01 May 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 28 Dec 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Latest attempt at D3</title>
+      <link>/2018/12/28/latest-attempt-at-d3/</link>
+      <pubDate>Fri, 28 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/12/28/latest-attempt-at-d3/</guid>
+      <description>library(r2d3) “Learn D3” has been on my todo list for years now. Maybe 3 years ago, Me and some teammates (know also didn’t no Javascript) tried to play with a simple example. Two summers ago, I worked through Scott Murray’s tutorials during a family vacation, after finally learning the ABCs of HTML, CSS, and JS through an online learning platform. I used a tiny bit of D3 in a little word game I made that fall, before I did an 3-month intensive software engineering bootcamp in full-stack javascript, where I didn’t</description>
+    </item>
     
     <item>
       <title>Testing SQL Queries from RStudio</title>
