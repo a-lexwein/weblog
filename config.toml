@@ -1,6 +1,6 @@
 baseurl = "/"
 languageCode = "en-us"
-title = "A Hugo website"
+title = "Alex Wein"
 theme = "hugo-lithium"
 googleAnalytics = ""
 disqusShortname = ""
@@ -20,7 +20,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     url = "https://github.com/a-lexwein"
 
 [params]
-    description = "A website built through Hugo and blogdown."
+    description = "Alex Wein might have some thoughts to share"
 
     # options for highlight.js (version, additional languages, and theme)
     highlightjsVersion = "9.11.0"
