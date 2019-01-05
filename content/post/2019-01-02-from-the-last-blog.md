@@ -7,8 +7,7 @@ categories: []
 tags: []
 ---
 
-I used to blog. I had a pretty solid run on tumblr about a decade ago. Years after I stopped posting, the blog seemed to just disappear and has since been replaced with whatever is now on (http://alexwhines.tumblr.com). I was briefly distraught that I lost my archive but got over it.  Months later, I discovered that the blog had survived; it had merely been moved to (http://alexwhines-blog.tumblr.com).
-
+I used to blog. I had a pretty solid run on tumblr that started about a decade ago. Years after I stopped posting, the blog seemed to just disappear and has since been replaced with whatever is now on (http://alexwhines.tumblr.com). I was briefly distraught that I lost my archive but got over it. Months later, I discovered that the blog had survived; it had merely been moved to (http://alexwhines-blog.tumblr.com).
 
 The url change has made navigating the site difficult, but I scraped the post containing my greatest hits and fixed the url in the links below. For your reading pleasure:
 
