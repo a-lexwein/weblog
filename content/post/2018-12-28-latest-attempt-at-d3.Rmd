@@ -12,7 +12,7 @@ tags:
 library(r2d3)
 ```
 
-Lately, there's been a particular kind of chart I want to make. I guess it's beeswarm plot with variable radius, or maybe a packed circle timeline. Whatever you call it, Keith Collins and Kevin Roose published a story with a [spectacular one](https://www.nytimes.com/interactive/2018/11/04/technology/jobs-not-mobs.html), tracking the proliferation of a right wing meme.
+Lately, there's been a particular kind of chart I want to make. I guess you can consider it a beeswarm plot with variable radius, or maybe a packed circle timeline. Whatever you call it, Keith Collins and Kevin Roose published a story with a [spectacular one](https://www.nytimes.com/interactive/2018/11/04/technology/jobs-not-mobs.html), tracking the proliferation of a right wing meme.
 
 I encountered something similar at Tapestry Conference in November -- [where I gave a talk](https://www.youtube.com/watch?v=PpAfmTgcGPY) by the way. Mollie Pettit presented some [great work](https://www.youtube.com/watch?v=v4VunaCburc) she's doing with the ACLU of Illinois, that examines racial bias in traffic incidents. Mollie's presentation was a standout among two days of wonderful talks. And the standout charts from Mollie's talk used beeswarms in the same manner the NYT journalists did (although her analysis doesn't use time on the x-axis). Afterward, I asked her how they were made. She told me something more specific than "D3", but that's all I remembered.
 
