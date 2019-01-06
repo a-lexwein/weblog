@@ -1,0 +1,91 @@
+---
+title: The songs that got me through 2018
+author: Alex
+draft: true
+date: '2019-01-05'
+slug: the-songs-that-got-me-through-2018
+categories: []
+tags: []
+---
+
+```{r setup, echo=FALSE}
+# load packages
+# connect to db
+
+
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(httr)
+
+con <- odbc::dbConnect(odbc::odbc(),  "Spotty")
+plays_tbl <- tbl(con, "historyalex")
+
+token <- spotifyr::get_spotify_access_token()
+
+```
+
+```{r get_data, echo=FALSE}
+# dedupe in db, then collect
+
+plays <- plays_tbl %>%
+  group_by(track_id, track_name, duration_ms, played_at) %>%
+  summarise(dup_count = n()) %>%
+  collect()
+```
+
+```{r spotifyr, echo=FALSE}
+tracks <- pull(plays,track_id) %>% unique
+
+# call spotifyr and get track metadata
+
+tracks_concat <- tracks %>%
+  head(50) %>%
+  paste(collapse = ",")
+
+uri <- paste0("https://api.spotify.com/v1/tracks/?ids=", tracks_concat)
+HeaderValue = paste0("Bearer ", token)
+
+track_metadata <- GET(uri, add_headers(Authorization = HeaderValue)) %>%
+  content
+track_metadata <- track_metadata$tracks
+
+
+get_tracks <- function(uri, header) {
+  track_metadata <- GET(uri, add_headers(Authorization = header))
+content(track_metadata)$tracks
+}
+
+tm <- get_tracks(uri, HeaderValue)
+
+
+g <- function(i) {paste0(tracks[i:(i + 50)], collapse = ",")}
+
+g(2, tracks)
+
+tracks_to_uris <- function(tracks) {
+  # turn every 50 elements into a concatenated string
+
+  n_tracks <- length(tracks)
+  
+  seq.int(0, n_tracks, 50) %>%
+    purrr::map_chr(function(i) {paste0(tracks[i:(min(i + 50, n_tracks))], collapse = ",")})
+}
+
+tracks_to_uris(tracks)
+```
+
+
+
+ 
+ 
+```{r}
+len <- tracks$length
+
+offset <- 0
+limit <- offset + 50
+
+offsets <- seq.int(0, length(tracks)/10, 50)  %>%
+  purrr::map()
+  
+```
