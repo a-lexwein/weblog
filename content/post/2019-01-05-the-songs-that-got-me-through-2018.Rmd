@@ -20,8 +20,8 @@ library(httr)
 
 con <- odbc::dbConnect(odbc::odbc(),  "Spotty")
 plays_tbl <- tbl(con, "historyalex")
-
 token <- spotifyr::get_spotify_access_token()
+HeaderValue = paste0("Bearer ", token)
 
 ```
 
@@ -39,53 +39,72 @@ tracks <- pull(plays,track_id) %>% unique
 
 # call spotifyr and get track metadata
 
-tracks_concat <- tracks %>%
-  head(50) %>%
-  paste(collapse = ",")
-
-uri <- paste0("https://api.spotify.com/v1/tracks/?ids=", tracks_concat)
-HeaderValue = paste0("Bearer ", token)
-
-track_metadata <- GET(uri, add_headers(Authorization = HeaderValue)) %>%
-  content
-track_metadata <- track_metadata$tracks
-
 
 get_tracks <- function(uri, header) {
+  GET(uri, add_headers(Authorization = header))
   track_metadata <- GET(uri, add_headers(Authorization = header))
-content(track_metadata)$tracks
+  content(track_metadata)$tracks
 }
 
-tm <- get_tracks(uri, HeaderValue)
-
-
-g <- function(i) {paste0(tracks[i:(i + 50)], collapse = ",")}
-
-g(2, tracks)
 
 tracks_to_uris <- function(tracks) {
   # turn every 50 elements into a concatenated string
 
   n_tracks <- length(tracks)
   
-  seq.int(0, n_tracks, 50) %>%
-    purrr::map_chr(function(i) {paste0(tracks[i:(min(i + 50, n_tracks))], collapse = ",")})
+  seq.int(1, n_tracks, 50) %>%
+    purrr::map_chr(function(i) {paste0(tracks[i:(min(i + 49, n_tracks))], collapse = ",")}) %>%
+    purrr::map_chr(function(str) {paste0("https://api.spotify.com/v1/tracks/?ids=",str)})
 }
-
-tracks_to_uris(tracks)
 ```
 
 
 
- 
- 
+
+
 ```{r}
-len <- tracks$length
+f <- function(i, tm) {
+  x <- tm[[i]]
+  list(playlist_track_number = i,
+          track_name = x$name,
+          track_id = x$id,
+          track_artist1 = x$artists[[1]]$name,
+          track_artist1_id = x$artists[[1]]$id,
+          # track_artists_mess = x$artists,
+          track_album = x$album$name,
+          track_album_id = x$album$id)
+}
+```
 
-offset <- 0
-limit <- offset + 50
+```{r track_meta_data, echo=FALSE}
+out1 <- tracks_to_uris(tracks) %>%
+  .[1:30] %>%
+  purrr::map(get_tracks, HeaderValue)
 
-offsets <- seq.int(0, length(tracks)/10, 50)  %>%
-  purrr::map()
-  
+out2 <- tracks_to_uris(tracks) %>%
+  .[31:60] %>%
+  purrr::map(get_tracks, HeaderValue)
+
+out3 <- tracks_to_uris(tracks) %>%
+  .[61:90] %>%
+  purrr::map(get_tracks, HeaderValue)
+
+out4 <- tracks_to_uris(tracks) %>%
+  .[91:121] %>%
+  purrr::map(get_tracks, HeaderValue)
+
+out <- c(out1, out2, out3, out4)
+
+saveRDS(out, "~/trackmetadata")
+```
+
+
+
+```{r all_track_metadata}
+metadata_to_df <- function(tracks_metadata) {
+  1:length(tracks_metadata) %>%
+    purrr::map_df(f, tracks_metadata)
+}
+
+all_track_metadata <- purrr::map_df(out, metadata_to_df)
 ```
