@@ -56,7 +56,7 @@ Now we have a table to query! (The `try` statement drops the table if it exists 
 
 We can query the table. Here's one I'm sure everybody has been dying to know: **What year were the most boys named Alex born?**
 
-Let's assume count anyone whose name starts with A-L-E-X. (Because the data doesn't include names with less than 5 births by gender in a given year, this undercounts the true number of Alexes born.)
+Let's count anyone whose name starts with A-L-E-X. (Because the data doesn't include names with less than 5 births by gender in a given year, this undercounts the true number of Alexes born.)
 
 
 ```{sql, connection = db}

@@ -106,7 +106,7 @@ try(DBI::dbRemoveTable(db, &quot;babynames&quot;))
 DBI::dbWriteTable(db, &quot;babynames&quot;, babynames::babynames)</code></pre>
 <p>Now we have a table to query! (The <code>try</code> statement drops the table if it exists so we can create a clean version.)</p>
 <p>We can query the table. Here’s one I’m sure everybody has been dying to know: <strong>What year were the most boys named Alex born?</strong></p>
-<p>Let’s assume count anyone whose name starts with A-L-E-X. (Because the data doesn’t include names with less than 5 births by gender in a given year, this undercounts the true number of Alexes born.)</p>
+<p>Let’s count anyone whose name starts with A-L-E-X. (Because the data doesn’t include names with less than 5 births by gender in a given year, this undercounts the true number of Alexes born.)</p>
 <pre class="sql"><code>SELECT year, sum(n) as num_alexes
 FROM babynames
 WHERE sex = &#39;M&#39; AND name LIKE &#39;Alex%&#39;
