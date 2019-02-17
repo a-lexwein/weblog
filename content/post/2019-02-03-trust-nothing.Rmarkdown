@@ -1,0 +1,55 @@
+---
+title: Trust Nothing
+author: Alex
+date: '2019-02-03'
+slug: trust-nothing
+categories: []
+tags: []
+draft: true
+---
+
+Notes on RJ Andrews's new book *Info We Trust*.
+
+1. At Tapestry, chatting about
+1. A few tiny flourishes really stood out to me: a subtle reordering of categories in a pie chart to enable better comparison. The tilted axes for the connected scatterplot really blew my mind when I saw it on Twitter a few months ago. https://twitter.com/infowetrust/status/1048255077377404928.  Re-encountering it in the book, what most jumped out was the challenge of implementing something like that using just about any charting library...and the easy of doing it 
+
+When I first wrote up the pitch for my Tapestry talk.
+
+I gotta learn how to draw.
+
+1. But to release a book called *Info We Trust* in 2019 and fail to grapple with crisis of misinformation and mistrust we find ourselves in.  It's not entirely fair.
+
+At Tapestry, I mentioned how excited I was for his book, how inspired I'd been by Understanding Comics, whose author Scott McCloud was one of RJ's ["Heroes of Interpolation"](https://www.youtube.com/watch?v=IVBH1TcNoI0) in RJ's 2015 talk at the same conference.  RJ responded that talking at Tapestry back then was a big step on his way to now becoming a published author. So obviously for the last few months, I've been wondering whether I have a book in me.
+
+*Info We Trust* is deeply
+
+So, Info We Trust has inspired me tremendously. I eager to hear more conversation around it.
+
+James Brown Live at the Appollo was one of my favorite albums. But these days I have a harder time listening to Brown sing "if you leave me, I'll go crazy" knowing a little bit more about his history of violence against women. RJ uses the James Brown concert recording to demonstrate how the beauty in the real world can be captured and preserved so we can access it in this magical abstract form simply called music.
+
+When I really pause and try to think clearly, I am mostly heartened. There tools to make sense of data are improving every year. More and more students are learning how to analyze data, and we're getting better at teaching the needed skills. Science marches forward: scientists have increasingly grappled with the replication crisis: the evidence might be damning, but more and more people are confronting that evidence than ever before. Science is better than it's ever been.
+
+Data isn't just the things in charts, it's how pregnant women get targeted with anti-vaccine propoganda on Facebook. It's what Republicans have used to gerrymander the American electorate to disempowered those who disagree with them.
+
+
+
+1. Share your data, share your code and generally "show your work".
+1. Admit when you make mistakes and when new information has changed your thinking.
+1. When you are confronted with new information, approach it with the same critical faculties regardless of whether you wish that information to true or false.
+
+
+
+That last point is an impossible challenge that I fail at constantly, but the first two aren't that much more work.
+
+Donald Trump, who has demonstrably cheated to become president, cheated on his taxes, and cheated on his wife, is the leader of a deeply corrupt Republican party that to accomodate the President.
+
+I can't believe 
+
+
+More and more, charts will be used to sell things. Charts will be used to successfully sell things to me! And 
+
+Our era of misinformation and mistrust.
+
+There were more white guys speaking, but 
+
+And part of me worries that I'm just seeing what I want to see.

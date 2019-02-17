@@ -1,0 +1,190 @@
+---
+title: "Manipulating Data in R with dplyr pipelines"
+author: Alex Wein
+date: 2017-12-20
+output: ioslides_presentation
+---
+
+
+## Link:
+- html slides and code available
+    + [github.com/a-lexwein/hr_dplyr_demo](http://github.com/a-lexwein/hr_dplyr_demo) 
+- [link to slides](http://htmlpreview.github.io/?https://github.com/a-lexwein/hr_dplyr_demo/blob/master/dplyr_demo.html#1)
+
+## What we'll cover:
+- What's R?
+- What's a data frame?
+- What's the pipe (`%>%`)?
+- manipulating data frames with dplyr and pipes.
+
+## What is R?
+- __R__ is an open source programming language built initially for statistical analysis that has evolved into a full-service language for data science.
+- Often run interactively.
+- It's a programming language with all that programming language stuff: primitive types, functions, loops, functional and object-oriented styles.
+- __Base R:__ functionality of R when you install it, without using any libraries.
+- __RStudio__ is an integrated development environment for using R.
+
+## Should you, a Javascript web developer, care about R?
+- No
+- but...maybe?
+
+## The tidyverse
+- a set of libraries (packages) that handle the central aspects of data science.
+- One tidyverse package: __dplyr__, the main data manipulation package.
+- Sometimes called the Hadley-verse. The lead developer on the packages is named Hadley Wickham.
+- The packages play really well together: manipulating data with __dplyr__ then charting it with __ggplot2__.
+- Good documentation (www.tidyverse.org), really well designed software.
+- Easy to learn (as far as coding goes), but deeply expressive.
+- Best resource: R For Data Science (Wickham & Grolemund) (http://r4ds.had.co.nz/)
+- RStudio cheat sheets are great, too.
+
+## data frames
+- It's a rectangle with numbers (or strings) in it!
+- rows represent observations
+- columns represent properties (variables). Variables have names.
+- all values in a column have the same type.
+
+
+----
+```{r, message=FALSE}
+## install.packages('dplyr') # first time you run, need to install
+library(dplyr) # call to use dplyr
+starwars # a sample dataset preinstalled with dplyr
+```
+
+
+## What do you do with a rectangle of data:
+
+- **add new variables based on existing data: ** BMI = mass/(height^2)
+- **remove existing variables (or rearrange columns)** hair color won't be used in our analysis.
+- **remove rows:** exclude droids, exclude any characters that are missing data for height or mass (like Grand Moff Tarkin)
+- **sort the rows:** which character has the highest BMI? (It's Jabba!)
+- **aggregate all rows into one:** what's the average BMI of non-droid Star Wars characters?
+
+## What that looks like in dplyr:
+```{r}
+starwars %>%
+  mutate(bmi = mass/((height/100)^2)) %>%
+  select(name, species, bmi) %>%
+  filter(species != 'Droid') %>%
+  filter(!is.na(bmi)) %>%
+  arrange(desc(bmi)) %>%
+  summarise(avg_bmi = mean(bmi), observations = n())
+```
+
+
+## Other things you do with data frames:
+- aggregate into groups instead of just one line
+- combine two data frames together:
+    + combining observations: two data frames with the same variables.
+    + augmenting observations: joining data frames based on common attributes.
+- dplyr handles these, too: `group_by(), bind_rows(), left_join()` and other joins.
+
+## These manipulations are the spine of data analysis, and every data analysis framework has a way to do all of this.
+- If you've used spreadsheets a little, you've probably done a lot of this: sort, vlookup, pivot tables, filter.
+- In a spreadsheet workflow, they don't feel like a unified set of operations, and they can be hard to combine.
+- I've done this using a lot of tools...dplyr is __The Right Way__.
+
+# Pipes %>%
+
+## A Function in R
+- functions in base R look a lot like javascript.
+```{r}
+add <- function(a,b) {
+  sum <- a+b
+  return(a+b)
+}
+```
+```{r}
+add(1,2)
+add(add(1,2),3)
+```
+
+## The pipe %>%
+- The pipe changes the syntax of R with the following rule:
+```{r eval=FALSE}
+ val1 %>% fun(val2) ==> fun(val1,val2)
+```
+- The value to the left of the pipe becomes the first argument of the function its right
+- `==>` is not code
+- `|` in terminal is also a pipe function.
+
+## So we got
+```{r}
+add(1, 2)
+1 %>% add(2)
+add(add(1, 2), 3)
+1 %>% add(2) %>% add(3)
+```
+
+```{r}
+add(add(1,2),3)
+1 %>% add(2) %>% add(3)
+```
+
+----
+
+- Good style: end lines with a pipe `%>%`, indent piped-into lines.
+
+```{r}
+1 %>%
+  add(2) %>%
+  add(3)
+```
+
+
+## What's so great about this?
+- Data flows left to right and top to bottom
+- Code becomes a lot more readable
+- Easy to compose, debug, turn expressions into functions
+
+## dplyr
+- A library of pure functions to handle the most common data manipulations.
+- The functions make up a grammar of data frame manipulations.
+- `select(), filter(), arrange(), mutate(), summarise()`
+- `group_by(), bind_rows(), left_join()`
+- these are functions that take a data frame as their first argument and return a data frame (which is great for piping!)
+- I've used it for years and it's still very conjure-y to me (the heavy lifting is C++)
+
+## pure functions:
+- Don't change the input
+- Don't have side effects (since R is used interactively)
+- Always map input to the same output
+- Have javascript Array.prototype HOFs in mind: `map(), filter(), sort()`, and `reduce()` where `acc` is an array.
+
+## Why are pure functions great for data analysis?
+- (Don't change input) You definitely don't want to make any changes to your original data.
+- (Don't have side effects) Since R is used interactively a lot, you're more susceptible to side-effects.
+- (Map input to deterministic output) If it's not deterministic, it's not even data analysis: reproducibility is the whole game!
+
+## The pipe we wrote at the beginning
+
+```{r}
+starwars %>%
+  mutate(bmi = mass/((height/100)^2)) %>%
+  select(name, species, bmi) %>%
+  filter(species != 'Droid') %>%
+  filter(!is.na(bmi)) %>%
+  arrange(desc(bmi)) %>%
+  summarise(avg_bmi = mean(bmi), observations = n())
+```
+
+## Without Pipes
+```{r}
+step1 <- mutate(starwars, bmi = mass/((height/100)^2))
+step2 <-select(step1, name, species, bmi)
+step3 <-filter(step2, species != 'Droid')
+step4 <- filter(step3, !is.na(bmi))
+step5 <- arrange(step4, desc(bmi))
+step6 <- summarise(step5, avg_bmi = mean(bmi), observations = n())
+step6
+```
+
+```{r}
+summarise(arrange(filter(filter(select(mutate(starwars,
+  bmi = mass/((height/100)^2)), name, species, bmi),
+  species != 'Droid'),!is.na(bmi)), desc(bmi)),
+  avg_bmi = mean(bmi), observations = n())
+```
+
+
