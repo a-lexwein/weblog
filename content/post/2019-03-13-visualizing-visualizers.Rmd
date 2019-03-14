@@ -1,0 +1,21 @@
+---
+title: Visualizing Visualizers
+author: Alex
+date: '2019-03-13'
+slug: visualizing-visualizers
+categories: []
+tags: []
+draft: TRUE
+---
+
+
+First, I loaded the data.  I then made a quantile dot plot for the distributions of each of the three survey categories. Matt Kay showed off some quantile dot plots in his Tapestry talk on visualizing uncertainty,
+
+How to interpret: For every 100 DVS members, we'd expect 10 to self-rate as 1 or lower for their data skills.
+
+One of the things that has
+
+```{r}
+
+```
+

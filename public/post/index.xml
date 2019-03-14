@@ -6,10 +6,21 @@
     <description>Recent content in Posts on Alex Wein</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 03 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 13 Mar 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Visualizing Visualizers</title>
+      <link>/2019/03/13/visualizing-visualizers/</link>
+      <pubDate>Wed, 13 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/03/13/visualizing-visualizers/</guid>
+      <description>First, I loaded the data. I then made a quantile dot plot for the distributions of each of the three survey categories. Matt Kay showed off some quantile dot plots in his Tapestry talk on visualizing uncertainty,
+How to interpret: For every 100 DVS members, we’d expect 10 to self-rate as 1 or lower for their data skills.
+One of the things that has</description>
+    </item>
     
     <item>
       <title>Trust Nothing</title>
@@ -18,7 +29,7 @@
       
       <guid>/2019/02/03/trust-nothing/</guid>
       <description>Notes on RJ Andrews&amp;rsquo;s new book Info We Trust.
- At Tapestry, chatting about A few tiny flourishes really stood out to me: a subtle reordering of categories in a pie chart to enable better comparison. The tilted axes for the connected scatterplot really blew my mind when I saw it on Twitter a few months ago. https://twitter.com/infowetrust/status/1048255077377404928. Re-encountering it in the book, what most jumped out was the challenge of implementing something like that using just about any charting library&amp;hellip;and the easy of doing it  When I first wrote up the pitch for my Tapestry talk.</description>
+ At Tapestry, chatting about A few tiny flourishes really stood out to me: a subtle reordering of categories in a pie chart to enable better comparison. The tilted axes for the connected scatterplot really blew my mind when I saw it on Twitter a few months ago. https://twitter.com/infowetrust/status/1048255077377404928. Re-encountering it in the book, what most jumped out was the challenge of implementing something like that using just about any charting library&amp;hellip;and the relative ease of doing it when you&amp;rsquo;re working on real paper.</description>
     </item>
     
     <item>
