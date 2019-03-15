@@ -49,10 +49,11 @@ That was all done in R, and you can see the code at the bottom The main chart el
 library(tidyverse)
 dvs <- read_csv("https://raw.githubusercontent.com/emeeks/datavizsociety/master/challenge_data/dvs_challenge_1_membership_time_space.csv")
 dvs_colors <- c("#22B3A6", "#DDB42B", "#B275AD")
+percentiles <- function(x) quantile(x, seq(0,.99,.01))
 
-dvs_chart <- tibble(data = quantile(dvs$data, seq(0,.99,.01)),
-       visualization = quantile(dvs$visualization, seq(0,.99,.01)),
-       society = quantile(dvs$society, seq(0,.99,.01))) %>%
+dvs_chart <- tibble(data = percentiles(dvs$data),
+       visualization = percentiles(dvs$visualization),
+       society = percentiles(dvs$society)) %>%
   gather("key", "value") %>%
   mutate(key = factor(key, levels = c("data", "visualization", "society"))) %>%
   ggplot(aes(x = value, fill = key)) +

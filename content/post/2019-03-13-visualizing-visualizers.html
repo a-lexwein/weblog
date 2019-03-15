@@ -388,10 +388,11 @@ draft: TRUE
 <pre class="r"><code>library(tidyverse)
 dvs &lt;- read_csv(&quot;https://raw.githubusercontent.com/emeeks/datavizsociety/master/challenge_data/dvs_challenge_1_membership_time_space.csv&quot;)
 dvs_colors &lt;- c(&quot;#22B3A6&quot;, &quot;#DDB42B&quot;, &quot;#B275AD&quot;)
+percentiles &lt;- function(x) quantile(x, seq(0,.99,.01))
 
-dvs_chart &lt;- tibble(data = quantile(dvs$data, seq(0,.99,.01)),
-       visualization = quantile(dvs$visualization, seq(0,.99,.01)),
-       society = quantile(dvs$society, seq(0,.99,.01))) %&gt;%
+dvs_chart &lt;- tibble(data = percentiles(dvs$data),
+       visualization = percentiles(dvs$visualization),
+       society = percentiles(dvs$society)) %&gt;%
   gather(&quot;key&quot;, &quot;value&quot;) %&gt;%
   mutate(key = factor(key, levels = c(&quot;data&quot;, &quot;visualization&quot;, &quot;society&quot;))) %&gt;%
   ggplot(aes(x = value, fill = key)) +
