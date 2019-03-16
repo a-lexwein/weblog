@@ -36,7 +36,6 @@ Insights are great. But other stuff is good too!
 =======
 1. I then exported the work from Figma as an SVG in order to animate the chart using CSS. This was also a new experience for me and it took a lot of fiddling.  My starting point for how to spin the chart was [this Codepen example](https://codepen.io/eveness/pen/BjLaoa). The rotation makes it even harder to draw genuine insight from the chart.  But that's not the point.
 1. Finally, I brought the SVG and CSS code back into R and RMarkdown, using the `htmltools` package, so I could include it in this [RMarkdown/blogdown](https://bookdown.org/yihui/blogdown/) blog.
->>>>>>> f1d07493d9758994d773443061f9498ca4901323
 
 ## Here's some starting code.
 
