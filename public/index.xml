@@ -6,19 +6,19 @@
     <description>Recent content on Alex Wein</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 13 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 15 Mar 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Visualizing The Visualizers</title>
-      <link>/2019/03/13/visualizing-visualizers/</link>
-      <pubDate>Wed, 13 Mar 2019 00:00:00 +0000</pubDate>
+      <link>/2019/03/15/visualizing-visualizers/</link>
+      <pubDate>Fri, 15 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019/03/13/visualizing-visualizers/</guid>
+      <guid>/2019/03/15/visualizing-visualizers/</guid>
       <description>body {background-color: #E5E5E5} svg { animation-name: spin; animation-duration: 7000ms; animation-iteration-count: infinite; animation-timing-function: linear; transform-origin: 400px 315px; } @keyframes spin { 0% { transform: rotate(0deg); } 16.66% { transform: rotate(-120deg); } 33.32% { transform: rotate(-120deg); } 49.98% { transform: rotate(-240deg); } 66.64% { transform: rotate(-240deg); } 83.3% { transform: rotate(-360deg); } 100% { transform: rotate(-360deg); } }
-When people who take data visualization seriously talk about charts…there are a lot important rules</description>
+“The purpose of visualization is insight, not pictures” went the headline of a great interview with Ben Schneiderman.</description>
     </item>
     
     <item>

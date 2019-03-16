@@ -1,47 +1,40 @@
 ---
 title: Visualizing The Visualizers
 author: Alex
-date: '2019-03-13'
+date: '2019-03-15'
 slug: visualizing-visualizers
 categories: []
 tags: []
-draft: TRUE
 ---
-
 
 ```{r, echo=FALSE}
 htmltools::includeHTML(paste0(here::here(),"/static/dvs-fragment.html"))
 htmltools::includeCSS(paste0(here::here(),"/static/dvs-spin.css"))
 ```
 
-When people who take data visualization seriously talk about charts...there are a lot important rules
+"The purpose of visualization is insight, not pictures" went the headline of [a great interview](https://medium.com/multiple-views-visualization-research-explained/the-purpose-of-visualization-is-insight-not-pictures-an-interview-with-visualization-pioneer-ben-beb15b2d8e9b) with Ben Schneiderman.
 
-Inspirations:
+To that I say: "Usually."
 
+Not this chart though. I made this chart  -- plotting how members of the Data Visualization Society (including me!) self assess their skills in three dimensions -- with several purposes in mind, and they honestly had very little to do with "insight". Instead my goals were the following:
 
-1. The main chart type here is known as a quantile dotplot, which were introduced to me at Tapestry in Matthew Kay's keynote. In this version, Each side of the triangle has 100 dots.
-1. RJ Andrews recently published a fantastic book called *Info We Trust*. One small piece that really stuck with me was a connected scatterplot where he rotated the axis by 45 degrees. Since seeing it on twitter and then again while reading the book (which RJ gave out to everyone at Tapestry!), this chart has really stuck with me. I have no idea how to make a.  Unlike RJ's chart where the title enhances the meaning of the chart...my triangular setup actually hinders.
+1. Make something attention-grabbing that would stand out among dozens of charts of the same data.
+1. Play with some new-to-me tools and techniques.
+1. Make something aesthetically pleasing.
+1. Get a blog post out of it.
 
-{{< tweet 1048255077377404928 >}}
+Insights are great. But other stuff is good too!
 
-1. The rotation makes it even harder to draw genuine insight from the chart.  But that's not the point.  It's just to look pretty and get attention and stand out among all the other people visualizing the same data.  Which is all to say:
+## How I made the chart
 
-Back in November. I gave a talk on data visualization at Tapestry, a conference on "interactive data storytelling". The talk was a little rough, but the crowd seemed into it.
+1. The data comes from the [sign-up survey](https://docs.google.com/forms/d/e/1FAIpQLScfivalT2ma3iJZNT8x3hGBJwniWS2rK_Czacnmnj6q1ShlIQ/viewform) for the Data Visualization Society. (If you're into data viz, regardless of experience -- join us!)  The data was shared with everyone who joined the DVS, many of whom are also be trying to chart this data.
+1. The actual data work was done in R. I then made a quantile dot plot for the distributions of each of the three survey categories. Matthew Kay showed off some quantile dot plots in his [Tapestry talk](https://www.youtube.com/watch?v=E1kSnWvqCw0) on visualizing uncertainty, which is where I discovered the chart type. Here, each point is percentile. For every 100 DVS members, we'd expect 10 to self-rate as 1.0 or lower for their data skills, indicated by the 10 teal dots from 0 to 1.  The ggplot and the code to produce it is at the bottom of this post.
+1. I saved the ggplot as an SVG brought the plots into Figma, a design tool that I hadn't used before.  It took a lot of fiddling and even a little math to align the plots with the edges of an equilateral triangle.  [Here's a link](https://www.figma.com/file/RwtqrHqLVCRtw4JfEkaN86mr/awein-dvs-thing?node-id=0%3A1) to where the chart was after Figma.  (I first tried to do this step with [Google Drawings](https://docs.google.com/drawings/d/1xEtY2v9DeuzBPtwlRMrupECacw00YtqNityAtYFSK60/edit?usp=sharing) before switching to Figma.) I've been wanting to experiment with charts are on tilted axes since getting inspired by *Info We Trust* by RJ Andrews.  But while [RJ's connected scatterplot](https://twitter.com/infowetrust/status/1048255077377404928) uses the title to enhance insight, my use actually makes it harder to understand the data!
+1. I then exported the work from Figma as an SVG in order to animate the chart using CSS. This was also a new experience for me and it took a lot of fiddling.  My starting point for how to spin the chart was [this Codepen example](https://codepen.io/eveness/pen/BjLaoa). The rotation makes it even harder to draw genuine insight from the chart.  But that's not the point.
+1. Finally, I brought the SVG and CSS code back into R and RMarkdown, using the `htmltools` package, so I could include it in this [RMarkdown/blogdown](https://bookdown.org/yihui/blogdown/) blog.
 
-Data Visualizaion Society's leaders shared a dataset of sign-up
+## Here's some starting code.
 
-
-
-The first piece was done in R. I loaded the data.  I then made a quantile dot plot for the distributions of each of the three survey categories. Matt Kay showed off some quantile dot plots in his Tapestry talk on visualizing uncertainty. Although I'm not visualizing uncertainty, I was really taken with quantile dotplots. These are percentile dotpots in that each chart has 100 dots.
-
-
-How to interpret: For every 100 DVS members, we'd expect 10 to self-rate as 1 or lower for their data skills.
-
-The r code.
-
-
-
-### Here's some starting code.
 ```{r, fig.height = 13, warning=FALSE, message =FALSE}
 library(tidyverse)
 dvs <- read_csv("https://raw.githubusercontent.com/emeeks/datavizsociety/master/challenge_data/dvs_challenge_1_membership_time_space.csv")
@@ -64,6 +57,43 @@ dvs_chart <- tibble(data = percentiles(dvs$data),
         axis.title.y = element_blank())
 
 dvs_chart
+```
+
+## And here's the CSS to animate:
+
+```
+      body {background-color: #E5E5E5}
+      svg {
+        animation-name: spin;
+        animation-duration: 7000ms;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        transform-origin: 400px 315px;
+      }
+      
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        16.66% {
+            transform: rotate(-120deg);    
+          }
+        33.32% {
+            transform: rotate(-120deg);    
+          }  
+        49.98% {
+          transform: rotate(-240deg);    
+        }  
+        66.64% {
+            transform: rotate(-240deg);    
+          } 
+        83.3% {
+            transform: rotate(-360deg);    
+          } 
+        100% {
+          transform: rotate(-360deg);
+        }
+      }
 ```
 
 
