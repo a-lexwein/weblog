@@ -336,7 +336,7 @@ draft: TRUE
 </svg><style type="text/css">      body {background-color: #E5E5E5}
       svg {
         animation-name: spin;
-        animation-duration: 6000ms;
+        animation-duration: 7000ms;
         animation-iteration-count: infinite;
         animation-timing-function: linear;
         transform-origin: 400px 315px;
@@ -347,19 +347,19 @@ draft: TRUE
         0% {
           transform: rotate(0deg);
         }
-        30% {
+        16.66% {
             transform: rotate(-120deg);    
           }
-        36% {
+        33.32% {
             transform: rotate(-120deg);    
           }  
-        63% {
+        49.98% {
           transform: rotate(-240deg);    
         }  
-        69% {
+        66.64% {
             transform: rotate(-240deg);    
           } 
-        94% {
+        83.3% {
             transform: rotate(-360deg);    
           } 
         100% {
@@ -379,22 +379,21 @@ draft: TRUE
 <p>Back in November. I gave a talk on data visualization at Tapestry, a conference on “interactive data storytelling”. The talk was a little rough, but the crowd seemed into it.</p>
 <p>Data Visualizaion Society’s leaders shared a dataset of sign-up</p>
 <p>The first piece was done in R. I loaded the data. I then made a quantile dot plot for the distributions of each of the three survey categories. Matt Kay showed off some quantile dot plots in his Tapestry talk on visualizing uncertainty. Although I’m not visualizing uncertainty, I was really taken with quantile dotplots. These are percentile dotpots in that each chart has 100 dots.</p>
-<p>I then moved the data</p>
 <p>How to interpret: For every 100 DVS members, we’d expect 10 to self-rate as 1 or lower for their data skills.</p>
-<p>One of the things that has</p>
-<p>That was all done in R, and you can see the code at the bottom The main chart elements were built in ggplot2…you can see that at the bottom of this post.</p>
+<p>The r code.</p>
 <div id="heres-some-starting-code." class="section level3">
 <h3>Here’s some starting code.</h3>
 <pre class="r"><code>library(tidyverse)
 dvs &lt;- read_csv(&quot;https://raw.githubusercontent.com/emeeks/datavizsociety/master/challenge_data/dvs_challenge_1_membership_time_space.csv&quot;)
 dvs_colors &lt;- c(&quot;#22B3A6&quot;, &quot;#DDB42B&quot;, &quot;#B275AD&quot;)
 percentiles &lt;- function(x) quantile(x, seq(0,.99,.01))
+dvs_levels &lt;- c(&quot;data&quot;,&quot;visualization&quot;, &quot;society&quot;)
 
 dvs_chart &lt;- tibble(data = percentiles(dvs$data),
        visualization = percentiles(dvs$visualization),
        society = percentiles(dvs$society)) %&gt;%
   gather(&quot;key&quot;, &quot;value&quot;) %&gt;%
-  mutate(key = factor(key, levels = c(&quot;data&quot;, &quot;visualization&quot;, &quot;society&quot;))) %&gt;%
+  mutate(key = factor(key, levels = dvs_levels)) %&gt;%
   ggplot(aes(x = value, fill = key)) +
   geom_dotplot(binwidth = 0.33, dotsize = .5) +
   facet_wrap(~key, ncol = 1) +

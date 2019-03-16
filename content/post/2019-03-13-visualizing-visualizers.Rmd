@@ -18,6 +18,7 @@ When people who take data visualization seriously talk about charts...there are 
 
 Inspirations:
 
+
 1. The main chart type here is known as a quantile dotplot, which were introduced to me at Tapestry in Matthew Kay's keynote. In this version, Each side of the triangle has 100 dots.
 1. RJ Andrews recently published a fantastic book called *Info We Trust*. One small piece that really stuck with me was a connected scatterplot where he rotated the axis by 45 degrees. Since seeing it on twitter and then again while reading the book (which RJ gave out to everyone at Tapestry!), this chart has really stuck with me. I have no idea how to make a.  Unlike RJ's chart where the title enhances the meaning of the chart...my triangular setup actually hinders.
 
@@ -33,14 +34,10 @@ Data Visualizaion Society's leaders shared a dataset of sign-up
 
 The first piece was done in R. I loaded the data.  I then made a quantile dot plot for the distributions of each of the three survey categories. Matt Kay showed off some quantile dot plots in his Tapestry talk on visualizing uncertainty. Although I'm not visualizing uncertainty, I was really taken with quantile dotplots. These are percentile dotpots in that each chart has 100 dots.
 
-I then moved the data
 
 How to interpret: For every 100 DVS members, we'd expect 10 to self-rate as 1 or lower for their data skills.
 
-One of the things that has
-
-
-That was all done in R, and you can see the code at the bottom The main chart elements were built in ggplot2...you can see that at the bottom of this post.
+The r code.
 
 
 
@@ -50,12 +47,13 @@ library(tidyverse)
 dvs <- read_csv("https://raw.githubusercontent.com/emeeks/datavizsociety/master/challenge_data/dvs_challenge_1_membership_time_space.csv")
 dvs_colors <- c("#22B3A6", "#DDB42B", "#B275AD")
 percentiles <- function(x) quantile(x, seq(0,.99,.01))
+dvs_levels <- c("data","visualization", "society")
 
 dvs_chart <- tibble(data = percentiles(dvs$data),
        visualization = percentiles(dvs$visualization),
        society = percentiles(dvs$society)) %>%
   gather("key", "value") %>%
-  mutate(key = factor(key, levels = c("data", "visualization", "society"))) %>%
+  mutate(key = factor(key, levels = dvs_levels)) %>%
   ggplot(aes(x = value, fill = key)) +
   geom_dotplot(binwidth = 0.33, dotsize = .5) +
   facet_wrap(~key, ncol = 1) +

@@ -1,7 +1,7 @@
       body {background-color: #E5E5E5}
       svg {
         animation-name: spin;
-        animation-duration: 6000ms;
+        animation-duration: 7000ms;
         animation-iteration-count: infinite;
         animation-timing-function: linear;
         transform-origin: 400px 315px;
@@ -12,19 +12,19 @@
         0% {
           transform: rotate(0deg);
         }
-        30% {
+        16.66% {
             transform: rotate(-120deg);    
           }
-        36% {
+        33.32% {
             transform: rotate(-120deg);    
           }  
-        63% {
+        49.98% {
           transform: rotate(-240deg);    
         }  
-        69% {
+        66.64% {
             transform: rotate(-240deg);    
           } 
-        94% {
+        83.3% {
             transform: rotate(-360deg);    
           } 
         100% {
