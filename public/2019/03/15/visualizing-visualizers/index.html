@@ -446,12 +446,7 @@
 <li>I saved the ggplot as an SVG brought the plots into Figma, a design tool that I hadn’t used before. It took a lot of fiddling and even a little math to align the plots with the edges of an equilateral triangle. <a href="https://www.figma.com/file/RwtqrHqLVCRtw4JfEkaN86mr/awein-dvs-thing?node-id=0%3A1">Here’s a link</a> to where the chart was after Figma. (I first tried to do this step with <a href="https://docs.google.com/drawings/d/1xEtY2v9DeuzBPtwlRMrupECacw00YtqNityAtYFSK60/edit?usp=sharing">Google Drawings</a> before switching to Figma.) I’ve been wanting to experiment with charts are on tilted axes since getting inspired by <em>Info We Trust</em> by RJ Andrews. But while <a href="https://twitter.com/infowetrust/status/1048255077377404928">RJ’s connected scatterplot</a> uses the title to enhance insight, my use actually makes it harder to understand the data!</li>
 <li>I then exported the work from Figma as an SVG in order to animate the chart using CSS. This was also a new experience for me and it took a lot of fiddling. My starting point for how to spin the chart was <a href="https://codepen.io/eveness/pen/BjLaoa">this Codepen example</a>. The rotation makes it even harder to draw genuine insight from the chart. Good thing that’s not the point.</li>
 <li>Finally, I brought the SVG and CSS code back into R with the <code>htmltools</code> package, so I could include it in this blog you’re currently reading, which was made using <a href="https://bookdown.org/yihui/blogdown/">RMarkdown and blogdown</a>.</li>
-<li>I then exported the work from Figma as an SVG in order to animate the chart using CSS. This was also a new experience for me and it took a lot of fiddling. My starting point for how to spin the chart was <a href="https://codepen.io/eveness/pen/BjLaoa">this Codepen example</a>. The rotation makes it even harder to draw genuine insight from the chart. But that’s not the point.</li>
-<li>Finally, I brought the SVG and CSS code back into R and RMarkdown, using the <code>htmltools</code> package, so I could include it in this <a href="https://bookdown.org/yihui/blogdown/">RMarkdown/blogdown</a> blog.</li>
 </ol>
-</div>
-<div id="heres-some-starting-code." class="section level2">
-<h2>Here’s some starting code.</h2>
 <pre class="r"><code>library(tidyverse)
 dvs &lt;- read_csv(&quot;https://raw.githubusercontent.com/emeeks/datavizsociety/master/challenge_data/dvs_challenge_1_membership_time_space.csv&quot;)
 dvs_colors &lt;- c(&quot;#22B3A6&quot;, &quot;#DDB42B&quot;, &quot;#B275AD&quot;)
