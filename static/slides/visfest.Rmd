@@ -1,0 +1,643 @@
+---
+title: "Thinking Abstractly"
+subtitle: "with charts, sets, and functions"
+author: "Alex Wein"
+date: "2019-08-29 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+# Thanks!
+
+* Tony Chu, Stephanie Tuerk, and Jason Forrest
+* The visfest organizers
+* Ohio State Linguistics and Haverford College Math departments
+* Data Visualization Society, vis.social, and generally everyone in the data viz community for making it a community I want to be a part of.
+
+
+---
+background-image: url(images/alexwein-dataperson.png)
+background-size: contain
+
+
+---
+
+
+# Math
+
+1. Assumptions
+1. Definitions
+1. Inferences (Theorems)
+
+
+## $=$ &nbsp;&nbsp; vs.&nbsp;&nbsp; $=_{def}$
+
+
+---
+
+# Set theory is a foundation for the rest of math
+
+1. Define natural numbers in terms of sets
+1. Define integers in terms of natural numbers
+1. Rational numbers are based on integers
+1. Real numbers are constructed from rational numbers.
+
+* (Then there's this thing called Category Theory)
+
+---
+
+# What does any of this have to do with data visualization?
+
+1. We'll leverage intuitions about viz to understand this stuff.
+1. Viz isn't just about the visuals, it's about the mapping from data to visuals.
+1. Gives us a little bit of machinery to compare different types of data viz.
+1. Datasets are sets.
+
+---
+
+# Where we're going: **functions**
+
+1. A function is a special kind of relation
+1. A relation is a subset of a cartesian product
+1. A cartesian product is a special set of ordered pairs
+1. An ordered pair is a special kind of set
+
+#### A function is a special kind of set which is a special kind of set built from a special kind of set of special kinds of sets.
+
+---
+
+# Sets
+
+It's a collection of things.  That's it.
+
+Sets are defined solely in terms of membership. Given any two sets $A$ and $B$, either:
+
+$A \in B$ or $A \notin B$.
+
+$\in$ means "is in" or "is a member of"
+$\notin$ means "is not in"
+
+[]
+
+---
+
+# Assumptions for Set Theory
+
+1. Extensionality
+1. Empty Set
+1. Pairing
+1. Union
+1. Powerset
+1. Separation
+
+* Some other ones we're gonna pay less attention to for now.
+
+---
+
+# Assumption 1 - Extensionality
+
+## We need to define equality.
+
+## Two sets are "the Same" if they have the same members ( $A = B$ )
+
+$\{a, b, c\}  = \{b, a, c\}  = \{a,a,a, b , c\}$
+
+Order doesn't matter, uniqueness is baked into the definition.
+
+---
+
+# Subset: $A \subseteq B$
+
+We say "A is a subset of B" if every element of A is an element of B.
+
+Every set is a subset of itself.
+
+If $A \subseteq B$ and $B \subseteq C$, then $A \subseteq C$
+
+1. dogs are a subset of animals
+1. dogs named Sparky are a subset of dogs.
+1. dogs named Sparky are a subset of animals.
+1. natural numbers are a subset of integers.
+1. Youtube Employees are a subset of Google Employees.
+1. Every scatterplot ever made is a subset of every data visualization ever made.
+
+Given two sets, either the first is a subset of the second or its not!
+
+If "A is not a subset of B" ( $A	\nsubseteq B$ ), that means there's some element $b \in B$ where $b \notin A$.
+
+---
+background-image: url(intersection-example.png)
+background-size: cover
+
+---
+
+# Assumption 2 -  Empty Set $\varnothing$
+
+Set membership and equality don't actually give us any sets.  We need to give ourselves a starting point.
+
+Let's assume there exists a set containing no elements.  We can denote it as $\{\}$, but it's helpful to give the empty set its own symbol $\varnothing$.
+
+**Vacuous Quantification** - when you have a definition based on "every member of a set", it's going to be true for the empty set. For instance, $\varnothing$ is a subset of every other set.
+
+---
+
+# Assumption 3 - Pairing $\{ A, B \}$
+
+Given two sets A and B, we can construct a set with just those two elements.
+
+
+**Singleton**: special case when $A = B$...pairing gives us  $\{A, A\} = \{A\}$
+
+---
+
+# Infinite Sets from Nothing
+
+1. Assumption 2 gave us exactly one set to build with: $\varnothing$.
+1. Let's apply pairing to construct a new (different) set $\{\varnothing\}$. These are not the same set!
+1. Now we have two sets.
+  1. We can now pair $\{\varnothing\}$ with itself to get $\{\{\varnothing\}\}$
+  1. Or we can pair $\{\varnothing\}$ with $\varnothing$ to get $\{\varnothing,\{\varnothing\}\}$.
+1. We can go on and on like that forever, it's a good way to define the natural numbers $\{0, 1, 2, ...\}$.
+
+---
+
+# Assumption 4 - Union: $\bigcup A$
+
+Given a set $A$, there's a set containing every element of every element of $A$.
+
+So supposed we have three sets
+
+$$ X = \\{a,b,c\\} $$
+$$ Y = \\{c,d,e\\}$$
+$$ Z = \\{f\\}$$
+
+Then $\bigcup \{X,Y,Z\}$ is equal to
+
+$$ \\{ a,b,c,d,e,f \\} $$
+--
+
+## The binary form is helpful syntax:
+
+# $A \cup B =_{def} \bigcup \{A,B\}$ 
+
+---
+
+# Assumption 5 -  Powerset: $P(A)$
+
+For any set A, there's a sets whose members are the subsets of A.
+
+So, no matter what A is, we know $\varnothing \in P(A)$ and $A \in P(A)$
+
+
+---
+
+# Bertrand Russell's Paradox
+
+--
+
+## Everyone in town shaves. 
+
+--
+
+##The barber shaves everyone who doesn't shave themself, and nobody else.
+
+--
+
+## Does the barber shave himself?  
+--
+`r emo::ji("thinking_face")`
+
+
+---
+# Assumption 6 - Separation
+
+If $A$ is a set and $P[x]$ is a condition on $x$ (where $x$ is a variable that ranges over sets), then there is a set, written
+
+# $\{ x \in A \,|\, P[x]\}$
+
+whose members are all the x in A that satisfy P[x].
+
+The $|$ symbol can be read as "such that".
+
+
+---
+
+# Intersection $A \cap B$
+
+Let's define the intersection of two sets A and B,
+
+# $A \cap B =_{def} \{a \in A |\, a \in B\}$.
+
+We don't need to assume intersection, because it is a special case of separation.
+
+People who use R and Python.
+
+1. $A \cap B = B \cap A$
+1. If $A \subseteq B$, then $A \cap B = A$
+1. $A \cap \varnothing = \varnothing$
+1. we say that A and B are **disjoint** if $A \cap B = \varnothing$
+
+
+---
+
+## Ordered Pairs $\langle A, B \rangle$
+
+1. Sets don't have order to them $\{ A, B \} = \{ B, A \}$.
+1. But we want ourselves a way to talk about order.
+1. If $A \neq B$, then we want $\langle A, B \rangle \neq \langle B, A \rangle$
+
+---
+
+## Definition of an ordered pair
+
+# $\langle A, B \rangle = \{\{A\}, \{A,B\}\}$
+
+
+This is built out 3 applications of the pairing assumption.
+
+---
+
+# Cartesian Product, $A \times B$
+
+The set of all ordered pairs $\langle a, b\rangle$ such that $a \in A$ and $b \in B$.
+
+---
+```{r, echo = FALSE, message = FALSE}
+library(dplyr)
+library(ggplot2)
+A <- c("p", "q", "r")
+B <- c("x", "y", "z")
+AxB <- tidyr::crossing(A,B)
+
+AxB %>%
+  mutate(pair = paste0("{", A, ", ", B, "}")) %>%
+  ggplot(aes(x = A, y = B, label = pair)) +
+  geom_text(size = 10) +
+  theme_bw() +
+  ggtitle("A x B") +
+  theme(axis.title = element_text(size = 20),
+        axis.text = element_text(size = 20),
+        plot.title = element_text(size = 25))
+```
+
+
+---
+
+# More dimensions.
+
+1. We have ordered pairs. How about triplets.
+1. # $\langle a,b,c \rangle =_{def} \langle \langle a, b \rangle, b \rangle$
+1. ##  $A \times B \times C =_{def} (A \times B) \times C$
+1. bigger ordered tuples, and cartesian products are also constructed recursively.
+
+---
+
+# Relations!
+
+## Simple definition
+
+## Really powerful concept
+
+--
+
+## A Relation $R$ between $A$ and $B$ is a subset of $A \times B$.
+
+### we can use the notation $a\,R\,b$ to mean $\langle a,b \rangle \in R$
+
+
+Important special case $B = A$, then we have a relation **on** A.
+
+---
+
+## Relations in the real world
+
+1. loves
+1. is taller than
+1. is at least as tall as
+1. is the parent child
+1. is the ancestor of
+1. is the brother-in-law of
+1. Has more privilege than (Eugenia Cheng, Category Theory in Life, https://www.youtube.com/watch?v=ho7oagHeqNc)
+1. is friends with
+1, is facebook friends with
+1. Verbs that relate people to propositions
+  * believes, knows, doubts
+
+---
+
+## Representing Relations: Using set notation
+
+# HadForDinner =
+
+$$
+\\{
+\langle Amir, Pasta \rangle,
+\langle Beatrice, PorkChop \rangle,
+\langle Carlos, PorkChop \rangle,
+\langle\ Carlos, Salad \rangle
+\\}
+$$
+
+---
+
+## Representing Relations: As a table.
+
+```{r, echo = FALSE, message=FALSE}
+HadForDinner <- tibble(
+ person = c("Amir", "Beatrice", "Carlos", "Carlos"),
+ food = c("Pasta", "PorkChop", "PorkChop", "Salad")
+)
+knitr::kable(HadForDinner,format='html')
+```
+
+---
+
+## Representing Relations: As a grid
+
+```{r, echo = FALSE, fig.height = 5}
+library(ggplot2)
+ggplot(HadForDinner, aes(x = person, y = food)) +
+  geom_point(size = 4) +
+  ggtitle("{person} had {food} for dinner") +
+    theme(axis.title = element_text(size = 20),
+        axis.text = element_text(size = 20),
+        plot.title = element_text(size = 25))
+```
+
+---
+## Order isn't doesn't matter for sets.
+
+### These are equivlanet:
+
+```{r, echo = FALSE, fig.width = 9}
+library(patchwork)
+dinner_grid <- ggplot(HadForDinner, aes(x = person, y = food)) + geom_point(size = 4) + ggtitle("{person} had {food} for dinner")
+
+reordered_dinner <- HadForDinner %>%
+  mutate(person = factor(person, levels = c("Beatrice", "Carlos", "Amir")),
+         food = factor(food, levels = c("PorkChop", "Pasta", "Salad"))) %>%
+  ggplot(aes(x = person, y = food)) + geom_point(size = 4) + ggtitle("{person} had {food} for dinner")
+
+dinner_grid + reordered_dinner
+```
+
+---
+## Representing Relations: using nodes and edges
+
+![](images/hadfordinner.png)
+
+
+
+---
+# Identity Relation on a set $A$
+
+# $id_A = \{\langle x,y \rangle \in A \times A | \, x = y \}$
+
+--
+<hr>
+
+.pull-left[
+![](images/5-el-id-no-label.png)
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE, fig.height = 5}
+A <- tibble(el = c("a", "b", "c", "d", "e"))
+ggplot(A, aes(x = el, y = el)) +
+  geom_point(size = 6) +
+    theme(axis.title = element_text(size = 15),
+        axis.text = element_text(size = 35))
+
+```
+
+$\{\langle a,a \rangle, \langle b,b \rangle, \langle c,c \rangle, \langle d,d \rangle, \langle e,e \rangle\}$
+
+]
+---
+
+# Inverse Relation: $R^{-1}$
+
+ $R^{-1} =_{def} \{ \langle x,y \rangle \,|\, y R x\}$
+
+A relation $R$ is a subet of $A \times B$, its inverse $R^{-1}$ is a subset of $B \times A$, by flipping the arrows.
+
+[Chart here from people to categories]
+
+---
+
+# $HadForDinner^{-1}$
+
+
+
+![](images/hadfordinner-inverse.png)
+
+---
+
+# Examples of inverse relations:
+
+1. is greater than; is less than
+1. loves; is loved by
+1. is the parent of; is the child of
+1. is the sibling of; is the sibling of
+
+# Composition
+
+Given two relations, we can combine them: Since they're just sets, we can union them together or take their intersection, but we can also compose them:
+
+[graph of composition]
+
+---
+
+Examples of relation compostion:
+
+1. is the grandfather of = is the father of the father of.
+1. is the brother-in-law of.
+1. function composition, which we'll get to soon.
+
+---
+
+Given a relation R
+
+ $(R^{-1})^{-1}  = R$
+ 
+ $id_a \circ R = R$
+ 
+ $R \circ id_b = R$
+
+---
+
+# Special Properties of Relations on A
+
+1. Reflexive
+1. Symmetric
+1. Transitive
+
+---
+
+A relation $R$ on $A$ is **reflexive** if $x\,R\,x$ for all $x \in A$.
+
+* Equivalent definition: $id_A \subseteq R$
+
+A relation is **irreflexive** if $\langle x , x \rangle \notin R$ for all $x \in A$.
+
+* Equivalent defintion: $id_A \cap R = \varnothing$
+
+<br />
+<br />
+
+
+![](images/5-elements-reflexive.png)
+
+--
+
+What's do reflexive relations look like as grids?
+
+---
+
+A relation $R$ on $A$ is **symmetric** if $a\,R\,b$ implies $a \,R\, b$ for all $a,b \in A$.
+
+* Equivalently, $R = R^{-1}$
+
+A relation is **asymmetric** if $a\,R\,b$ implies $\langle a, b \rangle \notin R$ for all $a,b \in A$.
+
+* Equivalently, $R \cap R^{-1} = \varnothing$
+
+A relation is **antisymmetric** if $a\,R\,b$ and $a\,R\,b$ imply $a = b$ for all $a,b \in A$
+
+* A relation is asymmetric if it is antisymmetric and irreflexive.
+
+<br /><br />
+![](images/5-elements-symmetric.png)
+--
+
+What does a symmetric relation look like as a grid?
+
+---
+
+A relation is **transitive** if $a\,R\,b$ and $b\,R\,c$ implies $a\,R\,c$ for all $a,b,c \in A$.
+
+* Equivalently: $R \circ R \subseteq R$
+
+A relation is **intransitive** if $a\,R\,b$ and $b\,R\,c$ implies $\langle a,c \rangle \notin R$ for all $a,b,c \in A$.
+
+<br /><br />
+![](images/5-elements-transitive.png)
+---
+# A few more special relations
+
+<br /><br />
+![](images/5-elements-prod-id-empty.png)
+---
+# **Equivalence Relation**
+
+A relation is an equivalence relation if it is reflexive, symmetric, and transitive.
+
+![](images/equivalence-relation.png)
+
+An equivlance relationship on A partitions A into disjoint subsets.
+
+We'll return to equivalence relations soon.
+
+---
+
+# Functions (we made it!)
+
+A relation $F$ is called a function from A to B, provided for every $a\in A$ there exists a unique $b \in B$ such that $a\,F\,b$.
+
+---
+
+![](images/isfun_empty_2to1.png)
+
+---
+
+# Is it a function?
+
+--
+1. ## is friends with 
+--
+
+1. ## is the boss of
+--
+
+1. ## is the mother of
+--
+
+1. ## is married to
+--
+
+1. ## A = passengers on a airline flight, B = seats on the airplane
+
+---
+# Is this a function?
+
+--
+
+1. ## $ y = 4x^2 - 3x + 4$
+--
+
+1. ## $x^2 + y^2 = 1$
+--
+
+1. ## $y = log(x)$
+
+---
+
+# One to One: injective
+
+---
+
+# Onto: Surjective
+
+---
+
+# Bijective: one-to-one and onto
+
+if f A to B is a bijective function, then f^{-1} is also a bijective function.
+
+If f isn't bijective, it's inverse is not a function.
+
+---
+# Different Flavors of Set Theory
+
+To get a fully foundational set theory, we need a few more assumptions.
+
+Not stuff I understand well.
+
+---
+
+# Table Space
+
+Tidy Data (from Hadley Wickham):
+
+1. Each variable forms a column.
+2. Each observation forms a row.
+3. Each type of observational unit forms a table.
+
+What you can do with a table:
+
+add a column (map)
+remove a column
+remove some rows (filter)
+aggregate (reduce)
+
+What you can do with two tables:
+
+1. Glue them together rowwise (binding or unioning)
+1. glue them together columnwise (joining)
+
+
+---
+
+# Category Theory
+
+1. I only sort of understand what it is.
+1. But as I understand it, the coolest thing in the world!
+
+
