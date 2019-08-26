@@ -14,16 +14,15 @@ class: center, middle, inverse, title-slide
 # Thinking Abstractly
 ## with charts, sets, and functions
 ### Alex Wein
-### 2019-08-29 (updated: 2019-08-26)
+### 2019-08-26 (updated: 2019-08-26)
 
 ---
 
 
-# Links
-
 ## These slides 👉 [alex-we.in/slides/visfest](https://alex-we.in/slides/visfest)
+
 ### Textbook: [Formal Foundations of Linguistic Theory](http://coffeeblack.org/publications/Pollard-Martin-FFLT.pdf) by Pollard and Martin
-## More notes maybe here
+
 
 ---
 
@@ -33,12 +32,19 @@ class: center, middle, inverse, title-slide
 * The visfest organizers
 * Ohio State Linguistics and Haverford College Math departments
 * Data Visualization Society, [vis.social](https://vis.social), and generally everyone in the data viz building the type of community I want to be a part of.
+* All of you!
 
 
 ---
 background-image: url(images/alexwein-dataperson.png)
 background-size: contain
 
+---
+#Alex Wein, over-apologizer.
+
+--
+
+# Sorry
 
 ---
 
@@ -65,34 +71,15 @@ background-size: contain
 
 Credit [Tai-Denai Bradley's What is Category Theory](https://www.math3ma.com/blog/what-is-category-theory-anyway)
 
-
----
-background-image: url(images/dvs-survey-1.png)
-background-size: contain
-class: center, middle
-
 ---
 
-# This is a Data Viz workshop, right?
+# This is about Data Viz, right?
 
 1. We'll leverage intuitions about viz to understand set theory.
 1. Viz isn't just about the visuals, it's about the mapping from data to visuals.
 1. Data and visualization are not programming concepts.
 1. Gives us a little bit of machinery to compare different types of data viz.
-1. Datasets are sets*.
-
----
-
-# Data sets are sets*
-
-1. A data table is a set of rows?
-1. Or is it a set of columns?
-
-
---
-
-1. Both
-
+1. Datasets are sets.
 
 
 ---
@@ -117,6 +104,7 @@ Sets are defined solely in terms of membership. Given any two sets `\(A\)` and `
 `\(A \in B\)` or `\(A \notin B\)`.
 
 `\(\in\)` means "is in" or "is a member of"
+
 `\(\notin\)` means "is not in"
 
 ---
@@ -130,7 +118,7 @@ Sets are defined solely in terms of membership. Given any two sets `\(A\)` and `
 1. Powerset
 1. Separation
 
-* We'll cover the above, but there are a few more to get to the fully standard set theory Zermelo-Frankel Choice (**ZFC**):
+* We'll cover the above, but there are a few more to get to the fully standard [Zermelo-Fraenkel Choice (**ZFC**)](https://en.wikipedia.org/wiki/Zermelo–Fraenkel_set_theory):
 
 1. Natural Numbers
 1. Replacement
@@ -147,6 +135,8 @@ Sets are defined solely in terms of membership. Given any two sets `\(A\)` and `
 
 ## We need to define equality.
 
+--
+
 ## Two sets are "the Same" if they have the same members ( `\(A = B\)` )
 
 `\(\{a, b, c\}  = \{b, a, c\}  = \{a,a,a, b , c\}\)`
@@ -155,20 +145,21 @@ Order doesn't matter, uniqueness is baked into the definition.
 
 ---
 
+# Extensional and Intensional Meaning
+
+1. Woodchucks and groundhogs
+1. Extensional meaning is shallow and doesn't completely cover how language works.
+1. Extensional meaning *does* map really nicely with relational data.
+
+---
+
 # Subset: `\(A \subseteq B\)`
 
 We say "A is a subset of B" if every element of A is an element of B.
 
-Every set is a subset of itself.
+($A \subseteq A$ for any set A)
 
 If `\(A \subseteq B\)` and `\(B \subseteq C\)`, then `\(A \subseteq C\)`
-
-1. dogs are a subset of animals
-1. dogs named Sparky are a subset of dogs.
-1. dogs named Sparky are a subset of animals.
-1. natural numbers are a subset of integers.
-1. Youtube Employees are a subset of Google Employees.
-1. Every scatterplot ever made is a subset of every data visualization ever made.
 
 Given two sets, either the first is a subset of the second or its not!
 
@@ -181,7 +172,7 @@ If "A is not a subset of B" ( `\(A	\nsubseteq B\)` ), that means there's some el
 
 # Assumption 2 -  Empty Set `\(\varnothing\)`
 
-Set membership and equality don't actually give us any sets.  We need to give ourselves a starting point.
+Set membership and extensionality don't actually give us any sets.  We need to give ourselves a starting point.
 
 Let's assume there exists a set containing no elements.  We can denote it as `\(\{\}\)`, but it's helpful to give the empty set its own symbol `\(\varnothing\)`.
 
@@ -205,7 +196,8 @@ Given two sets A and B, we can construct a set with just those two elements.
 1. Now we have two sets.
   1. We can now pair `\(\{\varnothing\}\)` with itself to get `\(\{\{\varnothing\}\}\)`
   1. Or we can pair `\(\{\varnothing\}\)` with `\(\varnothing\)` to get `\(\{\varnothing,\{\varnothing\}\}\)`.
-1. We can go on and on like that forever, it's a good way to define the natural numbers `\(\{0, 1, 2, ...\}\)`.
+1. We can go on and on like that forever.
+
 
 ---
 
@@ -213,7 +205,10 @@ Given two sets A and B, we can construct a set with just those two elements.
 
 Given a set `\(A\)`, there's a set containing every element of every element of `\(A\)`.
 
-So supposed we have three sets
+--
+
+
+Example:
 
 $$ X = \\{a,b,c\\} $$
 $$ Y = \\{c,d,e\\}$$
@@ -224,7 +219,7 @@ Then `\(\bigcup \{X,Y,Z\}\)` is equal to
 $$ \\{ a,b,c,d,e,f \\} $$
 --
 
-## The binary form is helpful syntax:
+## The binary syntax is helpful syntax:
 
 # `\(A \cup B =_{def} \bigcup \{A,B\}\)` 
 
@@ -239,9 +234,13 @@ So, no matter what A is, we know `\(\varnothing \in P(A)\)` and `\(A \in P(A)\)`
 ---
 class: center, middle
 
+Consider `\(A = \{a,b,c,d\}\)`:
+
 ![](images/powerset-no-lines.png)
 ---
 class: center, middle
+
+Consider `\(A = \{a,b,c,d\}\)`:
 
 ![](images/powerset-w-lines.png)
 
@@ -280,13 +279,12 @@ The `\(|\)` symbol can be read as "such that".
 
 # Intersection `\(A \cap B\)`
 
-Let's define the intersection of two sets A and B,
+Given two sets `\(A\)` and `\(B\)`.
 
-# `\(A \cap B =_{def} \{a \in A |\, a \in B\}\)`.
+# `\(A \cap B =_{def} \{a \in A |\, a \in B\}\)`
 
 We don't need to assume intersection, because it is a special case of separation.
 
-People who use R and Python.
 
 1. `\(A \cap B = B \cap A\)`
 1. If `\(A \subseteq B\)`, then `\(A \cap B = A\)`
@@ -299,10 +297,10 @@ People who use R and Python.
 ## Ordered Pairs `\(\langle A, B \rangle\)`
 
 1. Sets don't have order to them `\(\{ A, B \} = \{ B, A \}\)`.
-1. But we want ourselves a way to talk about order.
+1. But we want a way to talk about order.
 1. If `\(A \neq B\)`, then we want `\(\langle A, B \rangle \neq \langle B, A \rangle\)`
 
----
+--
 
 ## Definition of an ordered pair
 
@@ -327,7 +325,7 @@ The set of all ordered pairs `\(\langle a, b\rangle\)` such that `\(a \in A\)` a
 1. We have ordered pairs. How about triplets.
 1. # `\(\langle a,b,c \rangle =_{def} \langle \langle a, b \rangle, b \rangle\)`
 1. ##  `\(A \times B \times C =_{def} (A \times B) \times C\)`
-1. bigger ordered tuples, and cartesian products are also constructed recursively.
+1. Generally n-tuples and as an ordered pair of an (n-1)-tuple and another element.
 
 ---
 
@@ -351,12 +349,13 @@ Important special case `\(B = A\)`, then we have a relation **on** A.
 ## Relations in the real world
 
 1. loves
+1. ate for dinner
 1. is taller than
 1. is at least as tall as
 1. is the parent child
 1. is the ancestor of
 1. is the brother-in-law of
-1. Has more privilege than (Eugenia Cheng, Category Theory in Life, https://www.youtube.com/watch?v=ho7oagHeqNc)
+1. has more privilege than ([from Category Theory in Life](https://www.youtube.com/watch?v=ho7oagHeqNc) - Eugenia Cheng)
 1. is friends with
 1, is facebook friends with
 1. Verbs that relate people to propositions
@@ -463,8 +462,8 @@ $$
 
 ## Given a relation `\(R\)` from `\(A\)` to `\(B\)`
 
-1. # `\(dom(R) = \{ x \in A \,|\, \exists y \in B (x \,R\, y)\}\)`
-1. # `\(ran(R) = \{ y \in B \,|\, \exists x \in B (x \,R\, y)\}\)`
+1. ## `\(dom(R) = \{ x \in A \,|\, \exists y \in B (x \,R\, y)\}\)`
+1. ## `\(ran(R) = \{ y \in B \,|\, \exists x \in B (x \,R\, y)\}\)`
 
 `\(\exists\)` reads as "there exists".
 
@@ -474,7 +473,7 @@ $$
 
  `\(R^{-1} =_{def} \{ \langle x,y \rangle \,|\, y \,R\, x\}\)`
 
-A relation `\(R\)` is a subet of `\(A \times B\)`, its inverse `\(R^{-1}\)` is the subset of `\(B \times A\)` obtained by swapping the order of the pairs (reversing the arrows).
+If a relation `\(R\)` is a subet of `\(A \times B\)`, its inverse `\(R^{-1}\)` is the subset of `\(B \times A\)` obtained by swapping the order of the pairs (reversing the arrows).
 
 ---
 
@@ -487,7 +486,7 @@ A relation `\(R\)` is a subet of `\(A \times B\)`, its inverse `\(R^{-1}\)` is t
 # Examples of inverse relations:
 
 1. is greater than; is less than
-1. loves; is loved by
+1. loves; is loved by (passive voice more generally)
 1. is the parent of; is the child of
 1. is the sibling of; is the sibling of
 
@@ -496,11 +495,13 @@ A relation `\(R\)` is a subet of `\(A \times B\)`, its inverse `\(R^{-1}\)` is t
 
 Given two relations, we can combine them: Since they're just sets, we can union them together or take their intersection, but we can also compose them:
 
-1. Given R is a relation from A to B
-1. Given S is a relation from B to C
-1. ### `\(S \circ R =_{def} \{ \langle x,z \rangle \in A \times C \,|\, \exists y \in B (x\,R\,y \wedge y\,S\,z)\}\)`
-1. A few new symbols: The subset of pairs `\(\langle x,z \rangle\)` in `\(A \times C\)` where "there exists a `\(y\)`" ($\exists y$) such that "x is related to Y through R, *and* ($\wedge$) y is related to z through S.
-1. Note the order `\(S \circ R\)`: `\(S\)` happens "after" `\(R\)`.
+Given R is a relation from A to B,Given S is a relation from B to C, then
+
+
+### `\(S \circ R =_{def} \{ \langle x,z \rangle \in A \times C \,|\, \exists y \in B (x\,R\,y \wedge y\,S\,z)\}\)`
+
+* The subset of pairs `\(\langle x,z \rangle\)` in `\(A \times C\)` where "there exists a `\(y\)`" ( `\(\exists y\)` ) such that x is related to Y through R, *and* ( `\(\wedge\)` ) y is related to z through S.
+* Note the order `\(S \circ R\)`: `\(S\)` happens after `\(R\)`.
 
 ---
 background-image: url(images/relation-composition.png)
@@ -517,15 +518,6 @@ Examples of relation compostion:
   1. `\(g(f(x)) = x^2 + 2\)`
   1. `\(f(g(x)) = (x+2)^2\)` 
 
----
-
-# Given a relation R from A to B:
-
-## `\((R^{-1})^{-1}  = R\)`
- 
-## `\(id_b \circ R = R\)`
- 
-## `\(R \circ id_a = R\)`
 
 ---
 
@@ -600,8 +592,6 @@ We can use a hamburger: `\(a \equiv b\)` reads as "a is equivalent to b"
 ![](images/equivalence-relation.png)
 
 An equivlance relation on A partitions A into disjoint subsets.
-
-We'll return to equivalence relations soon.
 
 ---
 
@@ -692,25 +682,59 @@ class: center, middle
 
 
 ---
-class: center
 
+.pull-left[
 ### For any function `\(f: A \rightarrow B\)`, there exists an equivalence relation `\(\equiv_f\)` where `\(a \equiv b\)` if `\(f(a) = f(b)\)`
-
+]
+.pull-right[
 ![](images/mod-equivalence.png)
+]
 ---
 
-# One to One: injective
+# One to One: Injective
+
+* If `\(\langle a, b, \rangle \in F\)`, then `\(a = b\)`.  
 
 
 
 # Onto: Surjective
 
+* `\(ran(F) = B\)`
+
 
 # Bijective: one-to-one and onto
 
-if `\(F: A \rightarrow B\)` is a bijective function, then f^{-1} is also a bijective function.
+* If `\(F: A \rightarrow B\)` is a bijective function, then `\(f^{-1}\)` is also a bijective function.
+* If f isn't bijective, it's inverse is not a function.
 
-If f isn't bijective, it's inverse is not a function.
+---
+
+# Functional Programming
+
+1. Pure Functions
+  1. Don't affect input
+  1. Don't have any other side effects
+  1. Are deterministic: same input yield same output
+1. Higher Order Functions
+  - functions that take functions as input
+  - functions that return functions as output
+
+---
+
+# Functional Programming with Data
+
+1. Unchanging source of truth
+1. All the functions in statistics are math functions, not computer functions.
+1. You don't watch the act of observation affect the system.
+1. Deterministic functions means reproducibility
+
+
+
+--
+
+1. Hadley Wickham: [Joy of Functional Programming (for Data Science)](https://www.youtube.com/watch?v=bzUmK0Y07ck)
+1. Maxime Beauchemin: [Functional Data Engineering - a modern paradigm for batch data processing](https://medium.com/@maximebeauchemin/functional-data-engineering-a-modern-paradigm-for-batch-data-processing-2327ec32c42a)
+1. Michael Arntzenius: [DB ⋈ FP = Datafun: a new functional query language](https://www.youtube.com/watch?v=7HUotKIVFig)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
