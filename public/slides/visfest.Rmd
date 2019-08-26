@@ -12,12 +12,20 @@ output:
       countIncrementalSlides: false
 ---
 
+# Links
+
+## These slides `r emo::ji("point_right")` [alex-we.in/slides/visfest](https://alex-we.in/slides/visfest)
+### Textbook: [Formal Foundations of Linguistic Theory](http://coffeeblack.org/publications/Pollard-Martin-FFLT.pdf) by Pollard and Martin
+## More notes maybe here
+
+---
+
 # Thanks!
 
-* Tony Chu, Stephanie Tuerk, and Jason Forrest
+* Stephanie Tuerk, Tony Chu, and Jason Forrest
 * The visfest organizers
 * Ohio State Linguistics and Haverford College Math departments
-* Data Visualization Society, vis.social, and generally everyone in the data viz community for making it a community I want to be a part of.
+* Data Visualization Society, [vis.social](https://vis.social), and generally everyone in the data viz building the type of community I want to be a part of.
 
 
 ---
@@ -27,16 +35,13 @@ background-size: contain
 
 ---
 
-
 # Math
 
-1. Assumptions
-1. Definitions
-1. Inferences (Theorems)
-
+1. ### Assumptions
+1. ### Definitions
+1. ### Inferences
 
 ## $=$ &nbsp;&nbsp; vs.&nbsp;&nbsp; $=_{def}$
-
 
 ---
 
@@ -47,16 +52,41 @@ background-size: contain
 1. Rational numbers are based on integers
 1. Real numbers are constructed from rational numbers.
 
-* (Then there's this thing called Category Theory)
+---
+background-image: url(https://uploads-ssl.webflow.com/5b1d427ae0c922e912eda447/5b5679eed1ecea66513ef29d_examples.jpg)
+background-size: contain
+
+Credit [Tai-Denai Bradley's What is Category Theory](https://www.math3ma.com/blog/what-is-category-theory-anyway)
+
+
+---
+background-image: url(images/dvs-survey-1.png)
+background-size: contain
+class: center, middle
 
 ---
 
-# What does any of this have to do with data visualization?
+# This is a Data Viz workshop, right?
 
-1. We'll leverage intuitions about viz to understand this stuff.
+1. We'll leverage intuitions about viz to understand set theory.
 1. Viz isn't just about the visuals, it's about the mapping from data to visuals.
+1. Data and visualization are not programming concepts.
 1. Gives us a little bit of machinery to compare different types of data viz.
-1. Datasets are sets.
+1. Datasets are sets*.
+
+---
+
+# Data sets are sets*
+
+1. A data table is a set of rows?
+1. Or is it a set of columns?
+
+
+--
+
+1. Both
+
+
 
 ---
 
@@ -82,8 +112,6 @@ $A \in B$ or $A \notin B$.
 $\in$ means "is in" or "is a member of"
 $\notin$ means "is not in"
 
-[]
-
 ---
 
 # Assumptions for Set Theory
@@ -95,7 +123,16 @@ $\notin$ means "is not in"
 1. Powerset
 1. Separation
 
-* Some other ones we're gonna pay less attention to for now.
+* We'll cover the above, but there are a few more to get to the fully standard set theory Zermelo-Frankel Choice (**ZFC**):
+
+1. Natural Numbers
+1. Replacement
+1. Foundation
+1. Choice
+
+--
+
+# Also, we're skipping over a lot of formalism.
 
 ---
 
@@ -131,8 +168,7 @@ Given two sets, either the first is a subset of the second or its not!
 If "A is not a subset of B" ( $A	\nsubseteq B$ ), that means there's some element $b \in B$ where $b \notin A$.
 
 ---
-background-image: url(intersection-example.png)
-background-size: cover
+![](images/subset-sandwich.png)
 
 ---
 
@@ -193,6 +229,14 @@ For any set A, there's a sets whose members are the subsets of A.
 
 So, no matter what A is, we know $\varnothing \in P(A)$ and $A \in P(A)$
 
+---
+class: center, middle
+
+![](images/powerset-no-lines.png)
+---
+class: center, middle
+
+![](images/powerset-w-lines.png)
 
 ---
 
@@ -285,7 +329,6 @@ AxB %>%
         plot.title = element_text(size = 25))
 ```
 
-
 ---
 
 # More dimensions.
@@ -299,15 +342,15 @@ AxB %>%
 
 # Relations!
 
-## Simple definition
-
-## Really powerful concept
+## Simple definition; really powerful concept
 
 --
 
 ## A Relation $R$ between $A$ and $B$ is a subset of $A \times B$.
 
-### we can use the notation $a\,R\,b$ to mean $\langle a,b \rangle \in R$
+### We can use the notation $a\,R\,b$ to mean $\langle a,b \rangle \in R$
+
+
 
 
 Important special case $B = A$, then we have a relation **on** A.
@@ -370,21 +413,33 @@ ggplot(HadForDinner, aes(x = person, y = food)) +
 ```
 
 ---
-## Order isn't doesn't matter for sets.
+## Order doesn't matter for sets.
 
-### These are equivlanet:
+### These are equivalent:
 
-```{r, echo = FALSE, fig.width = 9}
-library(patchwork)
-dinner_grid <- ggplot(HadForDinner, aes(x = person, y = food)) + geom_point(size = 4) + ggtitle("{person} had {food} for dinner")
+.pull-left[
+```{r, echo = FALSE}
+ ggplot(HadForDinner, aes(x = person, y = food)) +
+ geom_point(size = 4) +
+ theme(axis.title = element_text(size = 20),
+        axis.text = element_text(size = 20),
+        plot.title = element_text(size = 25))
+```
+]
 
-reordered_dinner <- HadForDinner %>%
+.pull-right[
+```{r, echo = FALSE}
+HadForDinner %>%
   mutate(person = factor(person, levels = c("Beatrice", "Carlos", "Amir")),
          food = factor(food, levels = c("PorkChop", "Pasta", "Salad"))) %>%
-  ggplot(aes(x = person, y = food)) + geom_point(size = 4) + ggtitle("{person} had {food} for dinner")
-
-dinner_grid + reordered_dinner
+  ggplot(aes(x = person, y = food)) + geom_point(size = 4) +
+   theme(axis.title = element_text(size = 20),
+        axis.text = element_text(size = 20),
+        plot.title = element_text(size = 25))
 ```
+]
+
+
 
 ---
 ## Representing Relations: using nodes and edges
@@ -422,19 +477,27 @@ $\{\langle a,a \rangle, \langle b,b \rangle, \langle c,c \rangle, \langle d,d \r
 ]
 ---
 
+
+## Domain and Range
+
+## Given a relation $R$ from $A$ to $B$
+
+1. # $dom(R) = \{ x \in A \,|\, \exists y \in B (x \,R\, y)\}$
+1. # $ran(R) = \{ y \in B \,|\, \exists x \in B (x \,R\, y)\}$
+
+$\exists$ reads as "there exists".
+
+---
+
 # Inverse Relation: $R^{-1}$
 
- $R^{-1} =_{def} \{ \langle x,y \rangle \,|\, y R x\}$
+ $R^{-1} =_{def} \{ \langle x,y \rangle \,|\, y \,R\, x\}$
 
-A relation $R$ is a subet of $A \times B$, its inverse $R^{-1}$ is a subset of $B \times A$, by flipping the arrows.
-
-[Chart here from people to categories]
+A relation $R$ is a subet of $A \times B$, its inverse $R^{-1}$ is the subset of $B \times A$ obtained by swapping the order of the pairs (reversing the arrows).
 
 ---
 
 # $HadForDinner^{-1}$
-
-
 
 ![](images/hadfordinner-inverse.png)
 
@@ -447,29 +510,41 @@ A relation $R$ is a subet of $A \times B$, its inverse $R^{-1}$ is a subset of $
 1. is the parent of; is the child of
 1. is the sibling of; is the sibling of
 
+---
 # Composition
 
 Given two relations, we can combine them: Since they're just sets, we can union them together or take their intersection, but we can also compose them:
 
-[graph of composition]
+1. Given R is a relation from A to B
+1. Given S is a relation from B to C
+1. ### $S \circ R =_{def} \{ \langle x,z \rangle \in A \times C \,|\, \exists y \in B (x\,R\,y \wedge y\,S\,z)\}$
+1. A few new symbols: The subset of pairs $\langle x,z \rangle$ in $A \times C$ where "there exists a $y$" ($\exists y$) such that "x is related to Y through R, *and* ($\wedge$) y is related to z through S.
+1. Note the order $S \circ R$: $S$ happens "after" $R$.
+
+---
+background-image: url(images/relation-composition.png)
+background_size: contain
 
 ---
 
 Examples of relation compostion:
 
 1. is the grandfather of = is the father of the father of.
-1. is the brother-in-law of.
-1. function composition, which we'll get to soon.
+1. is the brother-in-law of
+1. function composition:
+  1. If we have $f(x) = x^2$ and $g(x) = x + 2$
+  1. $g(f(x)) = x^2 + 2$
+  1. $f(g(x)) = (x+2)^2$ 
 
 ---
 
-Given a relation R
+# Given a relation R from A to B:
 
- $(R^{-1})^{-1}  = R$
+## $(R^{-1})^{-1}  = R$
  
- $id_a \circ R = R$
+## $id_b \circ R = R$
  
- $R \circ id_b = R$
+## $R \circ id_a = R$
 
 ---
 
@@ -539,9 +614,11 @@ A relation is **intransitive** if $a\,R\,b$ and $b\,R\,c$ implies $\langle a,c \
 
 A relation is an equivalence relation if it is reflexive, symmetric, and transitive.
 
+We can use a hamburger: $a \equiv b$ reads as "a is equivalent to b"
+
 ![](images/equivalence-relation.png)
 
-An equivlance relationship on A partitions A into disjoint subsets.
+An equivlance relation on A partitions A into disjoint subsets.
 
 We'll return to equivalence relations soon.
 
@@ -551,12 +628,87 @@ We'll return to equivalence relations soon.
 
 A relation $F$ is called a function from A to B, provided for every $a\in A$ there exists a unique $b \in B$ such that $a\,F\,b$.
 
+1. Notation: $F(a) = b$ "b is the value of F at a"
+1. or: $F: a \rightarrow b$ "F maps a to b"
+
+1. $A$ is the **domain** of $F$.
+1. $B$ is the **codomain** of $F$.
+1. The **range** of $F$ is $\{b \in B \,|\, \exists a(F(a) = b)\}$
+
 ---
+class: center, middle
+
+![](images/isfun_1to1.png)
+
+---
+class: center, middle
 
 ![](images/isfun_empty_2to1.png)
 
 ---
+class: center, middle
 
+![](images/isfun_empty.png)
+
+---
+class: center, middle
+
+![](images/isfun_cartesian.png)
+
+---
+class: center, middle
+
+![](images/isfun_doesntcover.png)
+
+
+---
+class: center, middle
+
+![](images/isfun_notonto.png)
+
+---
+
+## Do you remember the vertical line test?
+
+```{r, echo = FALSE}
+"frame,A,B
+1, p,x
+1, q,y
+1, r,z
+2, p,x
+2, q,y
+2, r,z
+2, p,y
+3,,
+4, p,x
+4, p,y
+4, p,z
+4, q,x
+4, q,y
+4, q,z
+4, r,x
+4, r,y
+4, r,z
+5, p,x
+5, q,y
+6, p,y
+6, q,y
+6, r,y
+" %>%
+  readr::read_csv() %>%
+  mutate(frame = as.factor(frame)) %>%
+  filter(!is.na(A)) %>%
+  ggplot(aes(x = A, y = B)) +
+  facet_wrap(~frame, drop = FALSE) +
+  geom_point(size = 5) +
+  ggtitle("A = {p,q,r};   B = {z,y,z}") +
+  theme_bw() +
+  theme(axis.title = element_text(size = 20),
+        axis.text = element_text(size = 20),
+        plot.title = element_text(size = 25))
+```
+
+---
 # Is it a function?
 
 --
@@ -575,69 +727,43 @@ A relation $F$ is called a function from A to B, provided for every $a\in A$ the
 1. ## A = passengers on a airline flight, B = seats on the airplane
 
 ---
-# Is this a function?
+# Is it a function?
 
 --
 
-1. ## $ y = 4x^2 - 3x + 4$
+1. ## $y = 4x^2 - 3x + 4$
 --
 
 1. ## $x^2 + y^2 = 1$
 --
 
 1. ## $y = log(x)$
+--
 
+1. ### `message => console.log(message)`
+--
+
+1. ### `x => x + Math.rand()`
+
+
+---
+class: center
+
+### For any function $f: A \rightarrow B$, there exists an equivalence relation $\equiv_f$ where $a \equiv b$ if $f(a) = f(b)$
+
+![](images/mod-equivalence.png)
 ---
 
 # One to One: injective
 
----
+
 
 # Onto: Surjective
 
----
 
 # Bijective: one-to-one and onto
 
-if f A to B is a bijective function, then f^{-1} is also a bijective function.
+if $F: A \rightarrow B$ is a bijective function, then f^{-1} is also a bijective function.
 
 If f isn't bijective, it's inverse is not a function.
-
----
-# Different Flavors of Set Theory
-
-To get a fully foundational set theory, we need a few more assumptions.
-
-Not stuff I understand well.
-
----
-
-# Table Space
-
-Tidy Data (from Hadley Wickham):
-
-1. Each variable forms a column.
-2. Each observation forms a row.
-3. Each type of observational unit forms a table.
-
-What you can do with a table:
-
-add a column (map)
-remove a column
-remove some rows (filter)
-aggregate (reduce)
-
-What you can do with two tables:
-
-1. Glue them together rowwise (binding or unioning)
-1. glue them together columnwise (joining)
-
-
----
-
-# Category Theory
-
-1. I only sort of understand what it is.
-1. But as I understand it, the coolest thing in the world!
-
 
